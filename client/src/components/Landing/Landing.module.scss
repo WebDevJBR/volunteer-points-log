@@ -1,0 +1,17 @@
+.title {
+  text-align: center;
+  color: #E0E0E0;
+  font-size: xx-large;
+}
+
+.item {
+  margin: 10px 0px;
+  &.admin {
+    width: 70px;
+    margin: 0 auto;
+  }
+}
+
+.root {
+  border-radius: 20px;
+}

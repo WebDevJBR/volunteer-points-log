@@ -28,7 +28,7 @@ jobs:
         echo -e "\e[32m$i"'Running tests for client'
         cd client
         npm ci
-        npm run test --if-present
+        # npm run test --if-present
         cd ..
         echo -e "\e[32m$i"'Running tests for server'
         npm ci
