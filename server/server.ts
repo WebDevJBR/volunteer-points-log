@@ -8,6 +8,12 @@ import * as path from 'path';
 
 createConnection()
   .then(async connection => {
+
+    /**
+      * Synchronize database schema with models. 
+    */
+    await connection.synchronize();
+
     const app = express();
     const port = process.env.PORT || 5000;
 
