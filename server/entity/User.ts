@@ -1,16 +1,20 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import { VolunteerTimeEntry } from "./VolunteerTimeEntry";
 
-/**
- * This entity is for demonstration purposes only.
- */
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  firstName: string;
+  @Column({unique: true})
+  name: string;
+
+  @Column({nullable:true})
+  password: string;
 
   @Column()
-  lastName: string;
+  admin: boolean;
+
+  @OneToMany(type => VolunteerTimeEntry, timeEntry => timeEntry.enteredByUser)
+  timeEntries: VolunteerTimeEntry[];
 }
