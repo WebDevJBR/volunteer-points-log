@@ -1,31 +1,37 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
+import classes from './Button.module.scss';
 
 type Color = 'inherit' | 'primary' | 'secondary' | 'default';
 
 interface IProps {
   color: Color;
-  onClick: () => void;
+  disabled?: boolean;
+  onClick?: () => void;
 }
 
 const useButtonStyles = makeStyles({
   root: {
-    borderRadius: '20px'
+    borderRadius: classes.buttonBorderRadius
   },
   containedPrimary: {
-    backgroundColor: '#E8C35F',
+    backgroundColor: classes.primaryButtonColor,
     '&:hover': {
-      backgroundColor: '#E5C575'
+      backgroundColor: classes.primaryButtonColorHover
+    },
+    '&$disabled': {
+      backgroundColor: classes.primaryButtonDisabled
     }
   },
   containedSecondary: {
-    backgroundColor: '#575757',
+    backgroundColor: classes.secondaryButtonColor,
     '&:hover': {
-      backgroundColor: '#686868'
+      backgroundColor: classes.secondaryButtonColorHover
     },
-    border: '1px solid #FFFFFF'
-  }
+    border: classes.buttonBorder
+  },
+  disabled: {}
 });
 
 const StyledButton: React.FC<IProps> = props => {
@@ -34,12 +40,14 @@ const StyledButton: React.FC<IProps> = props => {
   return (
     <Button
       classes={{
+        disabled: buttonStyles.disabled,
         root: buttonStyles.root,
         containedPrimary: buttonStyles.containedPrimary,
         containedSecondary: buttonStyles.containedSecondary
       }}
       variant='contained'
       color={props.color}
+      disabled={props.disabled}
       fullWidth
       onClick={props.onClick}
     >

@@ -1,0 +1,21 @@
+
+// Button colors
+$primary-button-disabled: #9A9A9A;
+// $secondary-button-disabled: need a color
+$primary-button-color: #E8C35F;
+$primary-button-color-hover: #E5C575;
+$secondary-button-color: #575757;
+$secondary-button-color-hover: #686868;
+$button-border: 1px solid #FFFFFF;
+$button-border-radius: 20px;
+
+:export {
+  primaryButtonDisabled: $primary-button-disabled;
+  primaryButtonColor: $primary-button-color;
+  primaryButtonColorHover: $primary-button-color-hover;
+  // secondaryButtonDisabled: $secondary-button-disabled;
+  secondaryButtonColor: $secondary-button-color;
+  secondaryButtonColorHover: $secondary-button-color-hover;
+  buttonBorder: $button-border;
+  buttonBorderRadius: $button-border-radius;
+}
