@@ -42,41 +42,11 @@ const UserLogin: React.FC = props => {
   });
 
   useEffect(() => {
-    // This is an async test
-    // setTimeout(() => {
-    //   setState((prevState: IState) => {
-    //     return {
-    //       ...prevState,
-    //       userList: [
-    //         {
-    //           id: 0,
-    //           name: 'Brett'
-    //         },
-    //         {
-    //           id: 1,
-    //           name: 'Brandon'
-    //         },
-    //         {
-    //           id: 2,
-    //           name: 'Malakye'
-    //         },
-    //         {
-    //           id: 3,
-    //           name: 'Luke'
-    //         },
-    //         {
-    //           id: 4,
-    //           name: 'Michael'
-    //         }
-    //       ]
-    //     };
-    //   });
-    // }, 2000);
     const getUserList = async () => {
       const apiService = new ApiService();
-      const users = await apiService.get<IUser>('/users');
-      
-      console.log(users);
+      const users = await apiService.get<Array<IUser>>('/users', [{name: 'test', value: 'passed'}, {name: 'second-test', value: 'passed-again' }]);
+
+      setState({ ...state, userList: users })
     }
 
     getUserList();
