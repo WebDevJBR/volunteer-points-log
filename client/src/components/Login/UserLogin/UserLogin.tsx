@@ -1,26 +1,26 @@
-import React, { useState, useEffect } from "react";
-import { Grid, Container, NativeSelect, Input } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import React, { useState, useEffect } from 'react';
+import { Grid, Container, NativeSelect, Input } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 // import { useHistory } from 'react-router-dom';
 
-import ApiService from "../../../shared/Services/ApiService";
-import Button from "../../../shared/Input/Button/Button";
-import IUser from "../../../shared/Interfaces/IUser";
-import classes from "./UserLogin.module.scss";
+import ApiService from '../../../shared/Services/ApiService';
+import Button from '../../../shared/Input/Button/Button';
+import IUser from '../../../shared/Interfaces/IUser';
+import classes from './UserLogin.module.scss';
 
 const useNativeSelectStyles = makeStyles({
   root: {
-    backgroundColor: "#FFFFFF",
-    width: "250px"
+    backgroundColor: '#FFFFFF',
+    width: '250px'
   },
   select: {
-    paddingLeft: "10px"
+    paddingLeft: '10px'
   }
 });
 
 const useInputStyles = makeStyles({
   root: {
-    backgroundColor: "#FFFFFF"
+    backgroundColor: '#FFFFFF'
   }
 });
 
@@ -44,7 +44,7 @@ const UserLogin: React.FC = props => {
   useEffect(() => {
     const getUserList = async () => {
       const apiService = new ApiService();
-      const users = await apiService.get<Array<IUser>>("/users", []);
+      const users = await apiService.get<Array<IUser>>('/users', []);
 
       setState({ ...state, userList: users });
     };
@@ -63,11 +63,11 @@ const UserLogin: React.FC = props => {
   }
 
   const handleLogin = () => {
-    console.log("Logging in selected user", (state.selectedUser as IUser).name);
+    console.log('Logging in selected user', (state.selectedUser as IUser).name);
   };
 
   const handleAddUser = () => {
-    console.log("Navigating to Add User page");
+    console.log('Navigating to Add User page');
   };
 
   const handleChange = (name: keyof typeof state) => (
@@ -94,7 +94,7 @@ const UserLogin: React.FC = props => {
       alignItems="center"
       justify="center"
       direction="column"
-      style={{ minHeight: "100vh" }}
+      style={{ minHeight: '100vh' }}
     >
       <Container maxWidth="sm">
         <Grid item>
@@ -115,9 +115,9 @@ const UserLogin: React.FC = props => {
                 value={
                   Object.keys(state.selectedUser).length > 0
                     ? (state.selectedUser as IUser).id
-                    : ""
+                    : ''
                 }
-                onChange={handleChange("selectedUser")}
+                onChange={handleChange('selectedUser')}
                 input={
                   <Input
                     disableUnderline

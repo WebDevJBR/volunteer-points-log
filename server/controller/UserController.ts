@@ -1,12 +1,11 @@
-import { Request, Response } from "express";
-import { getManager, Like, Not } from "typeorm";
-import { User } from "../entity/User";
+import { Request, Response } from 'express';
+import { getManager, Like, Not } from 'typeorm';
+import { User } from '../entity/User';
 
 /**
  * Handles calls from the 'users' route.
  */
 export default class UserController {
-  
   /**
    * Gets a collection of all users.
    * @param request The HTTP request.
@@ -17,7 +16,7 @@ export default class UserController {
       .getRepository(User)
       .find({
         where: {
-          name: Not(Like("%admin%"))
+          name: Not(Like('%admin%'))
         }
       });
 

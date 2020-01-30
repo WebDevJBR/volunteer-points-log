@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 
 interface IQueryStringParam {
   name: string;
@@ -10,7 +10,9 @@ const buildUrl = (url: string, params: Array<IQueryStringParam>): string => {
   const numOfParams = params.length;
 
   params.map((param, index) => {
-    urlWithQueryString += `${param.name}=${param.value}${index === (numOfParams - 1) ? '' : '&'}`;
+    urlWithQueryString += `${param.name}=${param.value}${
+      index === numOfParams - 1 ? '' : '&'
+    }`;
   });
 
   return urlWithQueryString;
