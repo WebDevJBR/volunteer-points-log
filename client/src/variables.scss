@@ -9,6 +9,10 @@ $secondary-button-color-hover: #686868;
 $button-border: 1px solid #FFFFFF;
 $button-border-radius: 20px;
 
+// Colors
+$background-1: #575757;
+$background-2: #FFFFFF;
+
 :export {
   primaryButtonDisabled: $primary-button-disabled;
   primaryButtonColor: $primary-button-color;
@@ -18,4 +22,6 @@ $button-border-radius: 20px;
   secondaryButtonColorHover: $secondary-button-color-hover;
   buttonBorder: $button-border;
   buttonBorderRadius: $button-border-radius;
+  backgroundOne: $background-1;
+  backgroundTwo: $background-2;
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Container, NativeSelect, Input } from '@material-ui/core';
+import { NativeSelect, Input } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-// import { useHistory } from 'react-router-dom';
+import Login from '../Login';
 
 import ApiService from '../../../shared/Services/ApiService';
 import Button from '../../../shared/Input/Button/Button';
@@ -87,71 +87,52 @@ const UserLogin: React.FC = props => {
   };
 
   return (
-    <Grid
-      container
-      spacing={0}
-      alignContent="center"
-      alignItems="center"
-      justify="center"
-      direction="column"
-      style={{ minHeight: '100vh' }}
-    >
-      <Container maxWidth="sm">
-        <Grid item>
-          <div className={classes.title}>
-            <h1>USER LOGIN</h1>
-          </div>
-        </Grid>
-      </Container>
-      <Container maxWidth="sm">
-        <Grid item className={classes.gridItem}>
-          <div className={classes.container}>
-            <div className={classes.select}>
-              <NativeSelect
-                classes={{
-                  root: nativeSelectStyles.root,
-                  select: nativeSelectStyles.select
-                }}
-                value={
-                  Object.keys(state.selectedUser).length > 0
-                    ? (state.selectedUser as IUser).id
-                    : ''
-                }
-                onChange={handleChange('selectedUser')}
-                input={
-                  <Input
-                    disableUnderline
-                    classes={{ root: inputStyles.root }}
-                  ></Input>
-                }
-              >
-                <option value="" disabled></option>
-                {selectOptions.map(option => option)}
-              </NativeSelect>
-            </div>
-          </div>
+    <Login title={'USER LOGIN'}>
+      <div className={classes.container}>
+        <div className={classes.select}>
+          <NativeSelect
+            classes={{
+              root: nativeSelectStyles.root,
+              select: nativeSelectStyles.select
+            }}
+            value={
+              Object.keys(state.selectedUser).length > 0
+                ? (state.selectedUser as IUser).id
+                : ''
+            }
+            onChange={handleChange('selectedUser')}
+            input={
+              <Input
+                disableUnderline
+                classes={{ root: inputStyles.root }}
+              ></Input>
+            }
+          >
+            <option value='' disabled></option>
+            {selectOptions.map(option => option)}
+          </NativeSelect>
+        </div>
+      </div>
 
-          <div className={classes.container}>
-            <div className={classes.item}>
-              <Button
-                disabled={
-                  Object.keys(state.selectedUser).length === 0 ? true : false
-                }
-                color="primary"
-                onClick={handleLogin}
-              >
-                LOGIN
-              </Button>
-            </div>
-            <div className={classes.item}>
-              <Button color="secondary" onClick={handleAddUser}>
-                ADD
-              </Button>
-            </div>
-          </div>
-        </Grid>
-      </Container>
-    </Grid>
+      <div className={classes.container}>
+        <div className={classes.item}>
+          <Button
+            disabled={
+              Object.keys(state.selectedUser).length === 0 ? true : false
+            }
+            color='primary'
+            onClick={handleLogin}
+          >
+            LOGIN
+          </Button>
+        </div>
+        <div className={classes.item}>
+          <Button color='secondary' onClick={handleAddUser}>
+            ADD
+          </Button>
+        </div>
+      </div>
+    </Login>
   );
 };
 
