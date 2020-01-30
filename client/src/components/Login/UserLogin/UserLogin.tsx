@@ -3,6 +3,7 @@ import { Grid, Container, NativeSelect, Input } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 // import { useHistory } from 'react-router-dom';
 
+import ApiService from '../../../shared/Services/ApiService'
 import Button from '../../../shared/Input/Button/Button';
 import IUser from '../../../shared/Interfaces/IUser';
 import classes from './UserLogin.module.scss';
@@ -32,6 +33,7 @@ const UserLogin: React.FC = props => {
   // const history = useHistory();
   const nativeSelectStyles = useNativeSelectStyles();
   const inputStyles = useInputStyles();
+  const apiService = new ApiService();
   let selectOptions: object[] = [];
 
   const [state, setState] = useState<IState>({
@@ -41,35 +43,44 @@ const UserLogin: React.FC = props => {
 
   useEffect(() => {
     // This is an async test
-    setTimeout(() => {
-      setState((prevState: IState) => {
-        return {
-          ...prevState,
-          userList: [
-            {
-              id: 0,
-              name: 'Brett'
-            },
-            {
-              id: 1,
-              name: 'Brandon'
-            },
-            {
-              id: 2,
-              name: 'Malakye'
-            },
-            {
-              id: 3,
-              name: 'Luke'
-            },
-            {
-              id: 4,
-              name: 'Michael'
-            }
-          ]
-        };
-      });
-    }, 2000);
+    // setTimeout(() => {
+    //   setState((prevState: IState) => {
+    //     return {
+    //       ...prevState,
+    //       userList: [
+    //         {
+    //           id: 0,
+    //           name: 'Brett'
+    //         },
+    //         {
+    //           id: 1,
+    //           name: 'Brandon'
+    //         },
+    //         {
+    //           id: 2,
+    //           name: 'Malakye'
+    //         },
+    //         {
+    //           id: 3,
+    //           name: 'Luke'
+    //         },
+    //         {
+    //           id: 4,
+    //           name: 'Michael'
+    //         }
+    //       ]
+    //     };
+    //   });
+    // }, 2000);
+    const getUserList = async () => {
+      const apiService = new ApiService();
+      const users = await apiService.get<IUser>('/users');
+      
+      console.log(users);
+    }
+
+    getUserList();
+
   }, []);
 
   if (state.userList.length > 0) {

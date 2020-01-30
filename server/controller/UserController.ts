@@ -12,8 +12,11 @@ export default class UserController {
    * @param response The HTTP response.
    */
   static async getUsers(request: Request, response: Response): Promise<void> {
-    const userRepository = getManager().getRepository(User);
-    const users = await userRepository.find();
+    const users = await getManager()
+      .getRepository(User)
+      .createQueryBuilder("user")
+      .where("user.name NOT LIKE :admin", { admin: "admin" })
+      .getMany();
 
     response.send(users);
   }

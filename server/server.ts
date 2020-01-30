@@ -46,7 +46,7 @@ createConnection()
      * Any unregistered routes should be directed to the React app.
      */
     app.get('*', (req, res) => {
-      res.sendfile(path.join(`${__dirname}/client/index.html`));
+      res.sendFile(path.join(`${__dirname}/client/index.html`));
     });
 
     /**
