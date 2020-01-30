@@ -1,26 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { Grid, Container, NativeSelect, Input } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { useState, useEffect } from "react";
+import { Grid, Container, NativeSelect, Input } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 // import { useHistory } from 'react-router-dom';
 
-import ApiService from '../../../shared/Services/ApiService'
-import Button from '../../../shared/Input/Button/Button';
-import IUser from '../../../shared/Interfaces/IUser';
-import classes from './UserLogin.module.scss';
+import ApiService from "../../../shared/Services/ApiService";
+import Button from "../../../shared/Input/Button/Button";
+import IUser from "../../../shared/Interfaces/IUser";
+import classes from "./UserLogin.module.scss";
 
 const useNativeSelectStyles = makeStyles({
   root: {
-    backgroundColor: '#FFFFFF',
-    width: '250px'
+    backgroundColor: "#FFFFFF",
+    width: "250px"
   },
   select: {
-    paddingLeft: '10px'
+    paddingLeft: "10px"
   }
 });
 
 const useInputStyles = makeStyles({
   root: {
-    backgroundColor: '#FFFFFF'
+    backgroundColor: "#FFFFFF"
   }
 });
 
@@ -44,13 +44,15 @@ const UserLogin: React.FC = props => {
   useEffect(() => {
     const getUserList = async () => {
       const apiService = new ApiService();
-      const users = await apiService.get<Array<IUser>>('/users', [{name: 'test', value: 'passed'}, {name: 'second-test', value: 'passed-again' }]);
+      const users = await apiService.get<Array<IUser>>("/users", [
+        { name: "test", value: "passed" },
+        { name: "second-test", value: "passed-again" }
+      ]);
 
-      setState({ ...state, userList: users })
-    }
+      setState({ ...state, userList: users });
+    };
 
     getUserList();
-
   }, []);
 
   if (state.userList.length > 0) {
@@ -64,11 +66,11 @@ const UserLogin: React.FC = props => {
   }
 
   const handleLogin = () => {
-    console.log('Logging in selected user', (state.selectedUser as IUser).name);
+    console.log("Logging in selected user", (state.selectedUser as IUser).name);
   };
 
   const handleAddUser = () => {
-    console.log('Navigating to Add User page');
+    console.log("Navigating to Add User page");
   };
 
   const handleChange = (name: keyof typeof state) => (
@@ -91,20 +93,20 @@ const UserLogin: React.FC = props => {
     <Grid
       container
       spacing={0}
-      alignContent='center'
-      alignItems='center'
-      justify='center'
-      direction='column'
-      style={{ minHeight: '100vh' }}
+      alignContent="center"
+      alignItems="center"
+      justify="center"
+      direction="column"
+      style={{ minHeight: "100vh" }}
     >
-      <Container maxWidth='sm'>
+      <Container maxWidth="sm">
         <Grid item>
           <div className={classes.title}>
             <h1>USER LOGIN</h1>
           </div>
         </Grid>
       </Container>
-      <Container maxWidth='sm'>
+      <Container maxWidth="sm">
         <Grid item className={classes.gridItem}>
           <div className={classes.container}>
             <div className={classes.select}>
@@ -116,9 +118,9 @@ const UserLogin: React.FC = props => {
                 value={
                   Object.keys(state.selectedUser).length > 0
                     ? (state.selectedUser as IUser).id
-                    : ''
+                    : ""
                 }
-                onChange={handleChange('selectedUser')}
+                onChange={handleChange("selectedUser")}
                 input={
                   <Input
                     disableUnderline
@@ -126,7 +128,7 @@ const UserLogin: React.FC = props => {
                   ></Input>
                 }
               >
-                <option value='' disabled></option>
+                <option value="" disabled></option>
                 {selectOptions.map(option => option)}
               </NativeSelect>
             </div>
@@ -138,14 +140,14 @@ const UserLogin: React.FC = props => {
                 disabled={
                   Object.keys(state.selectedUser).length === 0 ? true : false
                 }
-                color='primary'
+                color="primary"
                 onClick={handleLogin}
               >
                 LOGIN
               </Button>
             </div>
             <div className={classes.item}>
-              <Button color='secondary' onClick={handleAddUser}>
+              <Button color="secondary" onClick={handleAddUser}>
                 ADD
               </Button>
             </div>
