@@ -7,19 +7,9 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Program",
+      "name": "Launch",
       "program": "${workspaceFolder}/server/server.ts",
-      "preLaunchTask": "tsc: build - tsconfig.json",
       "outFiles": ["${workspaceFolder}/build/**/*.js", "${workspaceFolder}/build/client/**/*.js"],
-      "skipFiles": [
-        "<node_internals>/**"
-      ]
-    },
-    {
-      "type": "node",
-      "request": "attach",
-      "name": "Attach",
-      "port": 9229,
       "skipFiles": [
         "<node_internals>/**"
       ]
@@ -29,7 +19,7 @@
       "request": "launch",
       "name": "Launch with nodemon",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "start:dev"],
+      "runtimeArgs": ["run", "build", "&&", "node", "--inspect-brk", "./build/server.js"],
       "outFiles": ["${workspaceFolder}/build/**/*.js", "${workspaceFolder}/build/client/**/*.js"],
       "restart": true,
       "console": "integratedTerminal",

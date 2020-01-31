@@ -2,5 +2,5 @@
   "watch": ["server", "client/src"],
   "ext": ".ts,.tsx,.js",
   "ignore": [],
-  "exec": "node --inspect-brk ./build/server.js"
+  "exec": "node ./build/server.js"
 }
