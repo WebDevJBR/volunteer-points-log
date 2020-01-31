@@ -22,7 +22,7 @@ export default class VolunteerController {
       .find({
         where: [
           { name: Like(`%${filter}%`) },
-          { mqa: Like(`%${filter}%`) },
+          { mka: Like(`%${filter}%`) },
           { membershipNumber: Like(`%${filter}%`) }
         ]
       });

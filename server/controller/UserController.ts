@@ -15,9 +15,7 @@ export default class UserController {
     const users = await getManager()
       .getRepository(User)
       .find({
-        where: {
-          name: Not(Like('%admin%'))
-        }
+        where: { admin: false }
       });
 
     response.send(users);

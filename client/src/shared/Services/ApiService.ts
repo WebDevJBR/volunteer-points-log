@@ -9,7 +9,7 @@ const buildUrl = (url: string, params: Array<IQueryStringParam>): string => {
   let urlWithQueryString = `${url}?`;
   const numOfParams = params.length;
 
-  params.map((param, index) => {
+  params.forEach((param, index) => {
     urlWithQueryString += `${param.name}=${param.value}${
       index === numOfParams - 1 ? '' : '&'
     }`;

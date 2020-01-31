@@ -33,7 +33,6 @@ const UserLogin: React.FC = props => {
   // const history = useHistory();
   const nativeSelectStyles = useNativeSelectStyles();
   const inputStyles = useInputStyles();
-  const apiService = new ApiService();
   let selectOptions: object[] = [];
 
   const [state, setState] = useState<IState>({
