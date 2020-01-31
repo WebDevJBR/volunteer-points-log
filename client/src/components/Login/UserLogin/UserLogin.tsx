@@ -30,7 +30,6 @@ interface IState {
 }
 
 const UserLogin: React.FC = props => {
-  // const history = useHistory();
   const nativeSelectStyles = useNativeSelectStyles();
   const inputStyles = useInputStyles();
   let selectOptions: object[] = [];
@@ -40,16 +39,18 @@ const UserLogin: React.FC = props => {
     selectedUser: {}
   });
 
-  const getUserList = async () => {
-    const apiService = new ApiService();
-    const users = await apiService.get<Array<IUser>>('/users', []);
-
-    setState({ ...state, userList: users });
-  };
-
+  /**
+   * Fires once when the component mounts. Retrieves User list.
+   */
   useEffect(() => {
+    const getUserList = async () => {
+      const users = await ApiService.get<Array<IUser>>('/users', []);
+
+      setState(previousState => ({ ...previousState, userList: users }));
+    };
+
     getUserList();
-  });
+  }, []);
 
   if (state.userList.length > 0) {
     selectOptions = (state.userList as IUser[]).map((user: IUser) => {
