@@ -19,7 +19,7 @@ const buildUrl = (url: string, params: Array<IQueryStringParam>): string => {
 };
 
 class ApiService {
-  get<T>(url: string, params: Array<IQueryStringParam>) {
+  static get<T>(url: string, params: Array<IQueryStringParam>) {
     return new Promise<T>((resolve, reject) => {
       axios
         .get(buildUrl(url, params))
@@ -34,7 +34,7 @@ class ApiService {
     });
   }
 
-  post<T>(url: string, data: object) {}
+  static post<T>(url: string, data: object) {}
 }
 
 export default ApiService;
