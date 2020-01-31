@@ -40,16 +40,16 @@ const UserLogin: React.FC = props => {
     selectedUser: {}
   });
 
+  const getUserList = async () => {
+    const apiService = new ApiService();
+    const users = await apiService.get<Array<IUser>>('/users', []);
+
+    setState({ ...state, userList: users });
+  };
+
   useEffect(() => {
-    const getUserList = async () => {
-      const apiService = new ApiService();
-      const users = await apiService.get<Array<IUser>>('/users', []);
-
-      setState({ ...state, userList: users });
-    };
-
     getUserList();
-  }, []);
+  });
 
   if (state.userList.length > 0) {
     selectOptions = (state.userList as IUser[]).map((user: IUser) => {
