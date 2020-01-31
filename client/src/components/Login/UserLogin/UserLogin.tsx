@@ -3,6 +3,7 @@ import { Grid, Container, NativeSelect, Input } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 // import { useHistory } from 'react-router-dom';
 
+import ApiService from '../../../shared/Services/ApiService';
 import Button from '../../../shared/Input/Button/Button';
 import IUser from '../../../shared/Interfaces/IUser';
 import classes from './UserLogin.module.scss';
@@ -39,38 +40,16 @@ const UserLogin: React.FC = props => {
     selectedUser: {}
   });
 
+  const getUserList = async () => {
+    const apiService = new ApiService();
+    const users = await apiService.get<Array<IUser>>('/users', []);
+
+    setState({ ...state, userList: users });
+  };
+
   useEffect(() => {
-    // This is an async test
-    setTimeout(() => {
-      setState((prevState: IState) => {
-        return {
-          ...prevState,
-          userList: [
-            {
-              id: 0,
-              name: 'Brett'
-            },
-            {
-              id: 1,
-              name: 'Brandon'
-            },
-            {
-              id: 2,
-              name: 'Malakye'
-            },
-            {
-              id: 3,
-              name: 'Luke'
-            },
-            {
-              id: 4,
-              name: 'Michael'
-            }
-          ]
-        };
-      });
-    }, 2000);
-  }, []);
+    getUserList();
+  });
 
   if (state.userList.length > 0) {
     selectOptions = (state.userList as IUser[]).map((user: IUser) => {
@@ -110,20 +89,20 @@ const UserLogin: React.FC = props => {
     <Grid
       container
       spacing={0}
-      alignContent='center'
-      alignItems='center'
-      justify='center'
-      direction='column'
+      alignContent="center"
+      alignItems="center"
+      justify="center"
+      direction="column"
       style={{ minHeight: '100vh' }}
     >
-      <Container maxWidth='sm'>
+      <Container maxWidth="sm">
         <Grid item>
           <div className={classes.title}>
             <h1>USER LOGIN</h1>
           </div>
         </Grid>
       </Container>
-      <Container maxWidth='sm'>
+      <Container maxWidth="sm">
         <Grid item className={classes.gridItem}>
           <div className={classes.container}>
             <div className={classes.select}>
@@ -145,7 +124,7 @@ const UserLogin: React.FC = props => {
                   ></Input>
                 }
               >
-                <option value='' disabled></option>
+                <option value="" disabled></option>
                 {selectOptions.map(option => option)}
               </NativeSelect>
             </div>
@@ -157,14 +136,14 @@ const UserLogin: React.FC = props => {
                 disabled={
                   Object.keys(state.selectedUser).length === 0 ? true : false
                 }
-                color='primary'
+                color="primary"
                 onClick={handleLogin}
               >
                 LOGIN
               </Button>
             </div>
             <div className={classes.item}>
-              <Button color='secondary' onClick={handleAddUser}>
+              <Button color="secondary" onClick={handleAddUser}>
                 ADD
               </Button>
             </div>

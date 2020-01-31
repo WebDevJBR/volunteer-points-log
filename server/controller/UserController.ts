@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
-import { getManager } from "typeorm";
-import { User } from "../entity/User";
+import { Request, Response } from 'express';
+import { getManager, Like, Not } from 'typeorm';
+import { User } from '../entity/User';
 
 /**
  * Handles calls from the 'users' route.
@@ -12,8 +12,11 @@ export default class UserController {
    * @param response The HTTP response.
    */
   static async getUsers(request: Request, response: Response): Promise<void> {
-    const userRepository = getManager().getRepository(User);
-    const users = await userRepository.find();
+    const users = await getManager()
+      .getRepository(User)
+      .find({
+        where: { admin: false }
+      });
 
     response.send(users);
   }
