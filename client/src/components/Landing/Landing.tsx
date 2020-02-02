@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import Button from '../../shared/Input/Button/Button';
 import Login from '../Login/Login';
 import classes from './Landing.module.scss';
+import { ApiEndpoints } from '../../shared/Constants/ApiEndpoints';
 
 const Landing: React.FC = props => {
   const history = useHistory();

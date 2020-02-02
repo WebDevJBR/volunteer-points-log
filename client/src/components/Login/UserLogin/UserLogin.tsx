@@ -7,6 +7,8 @@ import ApiService from '../../../shared/Services/ApiService';
 import Button from '../../../shared/Input/Button/Button';
 import IUser from '../../../shared/Interfaces/IUser';
 import classes from './UserLogin.module.scss';
+import { ApiEndpoints } from '../../../shared/Constants/ApiEndpoints';
+import { useHistory } from 'react-router-dom';
 
 const useNativeSelectStyles = makeStyles({
   root: {
@@ -32,7 +34,15 @@ interface IState {
 const UserLogin: React.FC = props => {
   const nativeSelectStyles = useNativeSelectStyles();
   const inputStyles = useInputStyles();
+  const history = useHistory();
+
   let selectOptions: object[] = [];
+
+  const handleNavigate = (path: string) => {
+    if (history) {
+      history.push(path);
+    }
+  };
 
   const [state, setState] = useState<IState>({
     userList: [],
@@ -44,7 +54,7 @@ const UserLogin: React.FC = props => {
    */
   useEffect(() => {
     const getUserList = async () => {
-      const users = await ApiService.get<Array<IUser>>('/users');
+      const users = await ApiService.get<Array<IUser>>(ApiEndpoints.GetUsers);
 
       setState(previousState => ({ ...previousState, userList: users }));
     };
@@ -66,9 +76,7 @@ const UserLogin: React.FC = props => {
     console.log('Logging in selected user', (state.selectedUser as IUser).name);
   };
 
-  const handleAddUser = () => {
-    console.log('Navigating to Add User page');
-  };
+  const handleAddUser = () => handleNavigate(ApiEndpoints.AddUser);
 
   const handleChange = (name: keyof typeof state) => (
     event: React.ChangeEvent<{ value: unknown }>
