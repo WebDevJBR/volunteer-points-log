@@ -1,13 +1,13 @@
 import React from 'react';
 import { Grid, Container } from '@material-ui/core';
 
-import classes from './Login.module.scss';
+import classes from './LoginBase.module.scss';
 
 interface IProps {
   title: string;
 }
 
-const Login: React.FC<IProps> = props => {
+const LoginBase: React.FC<IProps> = props => {
   return (
     <Grid
       container
@@ -19,6 +19,7 @@ const Login: React.FC<IProps> = props => {
       style={{ minHeight: '100vh' }}
     >
       <Container maxWidth='sm'>
+        
         <Grid item>
           <div className={classes.title}>
             <h1>{props.title}</h1>
@@ -34,4 +35,4 @@ const Login: React.FC<IProps> = props => {
   );
 };
 
-export default Login;
+export default LoginBase;

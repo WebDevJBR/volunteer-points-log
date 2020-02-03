@@ -15,7 +15,7 @@ interface IProps {
   className?: string;
   type?: string;
   value?: any;
-  onChange?: (event: object) => void;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const TextField: React.FC<IProps> = props => {

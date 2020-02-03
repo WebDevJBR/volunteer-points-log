@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
-import { Grid, Container, Button, TextField } from '@material-ui/core';
-import Snackbar from '@material-ui/core/Snackbar';
+import { Snackbar } from '@material-ui/core';
+import { Alert, Color } from '@material-ui/lab';
 
+import LoginBase from '../../../hoc/LoginBase/LoginBase';
+import TextField from '../../../shared/Input/TextField/TextField';
+import Button from '../../../shared/Input/Button/Button';
 import ApiService from '../../../shared/Services/ApiService';
 import { ApiEndpoints } from '../../../shared/Constants/ApiEndpoints';
-import { Alert, Color } from '@material-ui/lab';
+import { useHistory } from 'react-router-dom';
+
+import classes from './AddUser.module.scss';
 
 interface IState {
   username: string;
@@ -20,6 +25,8 @@ const AddUser: React.FC = props => {
     snackbarSeverity: 'success',
     snackbarMessage: ''
   });
+
+  const history = useHistory();
 
   const handleNameChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -57,6 +64,12 @@ const AddUser: React.FC = props => {
             snackbarSeverity: success === true ? 'success' : 'error',
             snackbarMessage: alertMessage
           });
+
+          if (success) {
+            setTimeout(() => {
+              history.push(ApiEndpoints.UserLogin);
+            }, 2000);
+          }
         });
     }
   };
@@ -76,59 +89,35 @@ const AddUser: React.FC = props => {
   };
 
   return (
-    <Grid
-      container
-      spacing={0}
-      alignContent="center"
-      alignItems="center"
-      justify="center"
-      direction="column"
-      style={{ minHeight: '100vh' }}
-    >
-      <Container maxWidth="sm">
-        <Snackbar
-          open={state.isSnackbarOpen}
-          autoHideDuration={5000}
-          onClose={handleSnackbarClose}
-          anchorOrigin={{ horizontal: 'center', vertical: 'top' }}
+    <LoginBase title='ADD USER'>
+      <div className={classes.item}>
+        <div className={classes.title}>USER NAME</div>
+        <TextField
+          className={classes.textField}
+          onChange={handleNameChange}
+          value={state.username}
+        ></TextField>
+      </div>
+      <div className={classes.submit}>
+        <Button
+          onClick={handleSubmit}
+          disabled={state.username.length === 0 ? true : false}
+          color='primary'
         >
-          <Alert
-            onClose={handleSnackbarClose}
-            severity={state.snackbarSeverity}
-          >
-            {state.snackbarMessage}
-          </Alert>
-        </Snackbar>
-        <Grid item>
-          <div>
-            <h1>ADD USER</h1>
-          </div>
-        </Grid>
-      </Container>
-      <Container maxWidth="sm">
-        <Grid item>
-          <div>
-            <div>
-              <TextField
-                onChange={handleNameChange}
-                value={state.username}
-              ></TextField>
-            </div>
-          </div>
-
-          <div>
-            <div>
-              <Button
-                onClick={handleSubmit}
-                disabled={state.username.length === 0 ? true : false}
-              >
-                SAVE
-              </Button>
-            </div>
-          </div>
-        </Grid>
-      </Container>
-    </Grid>
+          SAVE
+        </Button>
+      </div>
+      <Snackbar
+        open={state.isSnackbarOpen}
+        autoHideDuration={5000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ horizontal: 'center', vertical: 'top' }}
+      >
+        <Alert onClose={handleSnackbarClose} severity={state.snackbarSeverity}>
+          {state.snackbarMessage}
+        </Alert>
+      </Snackbar>
+    </LoginBase>
   );
 };
 

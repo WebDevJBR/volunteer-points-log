@@ -2,7 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import Button from '../../shared/Input/Button/Button';
-import Login from '../Login/Login';
+import LoginBase from '../../hoc/LoginBase/LoginBase';
 import classes from './Landing.module.scss';
 import { ApiEndpoints } from '../../shared/Constants/ApiEndpoints';
 
@@ -16,11 +16,11 @@ const Landing: React.FC = props => {
   };
 
   return (
-    <Login title={'VOLUNTEER POINT'}>
+    <LoginBase title={'VOLUNTEER POINT'}>
       <div className={classes.item}>
         <Button
           color='primary'
-          onClick={() => handleNavigate('/login/user')}
+          onClick={() => handleNavigate(ApiEndpoints.UserLogin)}
           className={classes.userButton}
         >
           USER
@@ -29,12 +29,12 @@ const Landing: React.FC = props => {
       <div className={classes.item}>
         <Button
           color='secondary'
-          onClick={() => handleNavigate('/login/admin')}
+          onClick={() => handleNavigate(ApiEndpoints.AdminLogin)}
         >
           ADMIN
         </Button>
       </div>
-    </Login>
+    </LoginBase>
   );
 };
 

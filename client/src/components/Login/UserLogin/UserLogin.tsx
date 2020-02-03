@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NativeSelect, Input } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import Login from '../Login';
+import LoginBase from '../../../hoc/LoginBase/LoginBase';
 
 import ApiService from '../../../shared/Services/ApiService';
 import Button from '../../../shared/Input/Button/Button';
@@ -95,7 +95,7 @@ const UserLogin: React.FC = props => {
   };
 
   return (
-    <Login title={'USER LOGIN'}>
+    <LoginBase title={'USER LOGIN'}>
       <div className={classes.container}>
         <div className={classes.select}>
           <NativeSelect
@@ -140,7 +140,7 @@ const UserLogin: React.FC = props => {
           </Button>
         </div>
       </div>
-    </Login>
+    </LoginBase>
   );
 };
 
