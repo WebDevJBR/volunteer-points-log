@@ -5,13 +5,8 @@
 }
 
 .item {
-  margin: 10px 0px;
-  &.admin {
-    width: 70px;
-    margin: 0 auto;
+  margin-bottom: 10px;
+  .userButton {
+    width: 110px;
   }
-}
-
-.root {
-  border-radius: 20px;
 }

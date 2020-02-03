@@ -7,6 +7,7 @@ type Color = 'inherit' | 'primary' | 'secondary' | 'default';
 
 interface IProps {
   color: Color;
+  className?: string;
   disabled?: boolean;
   onClick?: () => void;
 }
@@ -39,6 +40,7 @@ const StyledButton: React.FC<IProps> = props => {
 
   return (
     <Button
+      className={props.className}
       classes={{
         disabled: buttonStyles.disabled,
         root: buttonStyles.root,
@@ -48,7 +50,6 @@ const StyledButton: React.FC<IProps> = props => {
       variant='contained'
       color={props.color}
       disabled={props.disabled}
-      fullWidth
       onClick={props.onClick}
     >
       {props.children}
