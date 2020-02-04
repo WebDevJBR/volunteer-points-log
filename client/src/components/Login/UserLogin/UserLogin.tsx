@@ -73,17 +73,26 @@ const UserLogin: React.FC = props => {
   const handleChange = (name: keyof typeof state) => (
     event: React.ChangeEvent<{ value: unknown }>
   ) => {
-    const id: number = parseInt(event.target.value as string);
-    const selectedUser = state.userList.find((user: IUser) => {
-      return user.id === id;
-    });
+    // If anything other than a number, returns 'NaN'
+    const id: number = Number(event.target.value);
 
-    setState((prevState: IState) => {
-      return {
-        ...prevState,
-        [name]: selectedUser
-      };
-    });
+    if (!isNaN(id)) {
+      const selectedUser: IUser | undefined = state.userList.find(
+        (user: IUser) => {
+          return user.id === id;
+        }
+      );
+
+      // Don't set state if we couldn't find the user.
+      if (selectedUser !== undefined) {
+        setState((prevState: IState) => {
+          return {
+            ...prevState,
+            [name]: selectedUser
+          };
+        });
+      }
+    }
   };
 
   return (
