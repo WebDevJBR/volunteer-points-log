@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { FormControl } from '@material-ui/core';
 
-import Login from '../Login';
+import LoginBase from '../../../hoc/LoginBase/LoginBase';
 import TextField from '../../../shared/Input/TextField/TextField';
 import Button from '../../../shared/Input/Button/Button';
 import classes from './AdminLogin.module.scss';
@@ -115,19 +114,15 @@ const AdminLogin: React.FC = props => {
   };
 
   return (
-    <Login title={'ADMIN LOGIN'}>
+    <LoginBase title={'ADMIN LOGIN'}>
       <form onSubmit={submitHandler}>
         <div className={classes.item}>
           <div className={classes.title}>USER NAME</div>
-          <FormControl required>
-            <TextField
-              value={state.controls.username.value}
-              className={classes.textField}
-              onChange={(event: object) =>
-                inputChangedHandler(event, 'username')
-              }
-            ></TextField>
-          </FormControl>
+          <TextField
+            value={state.controls.username.value}
+            className={classes.textField}
+            onChange={(event: object) => inputChangedHandler(event, 'username')}
+          ></TextField>
         </div>
         <div className={classes.item}>
           <div className={classes.title}>PASSWORD</div>
@@ -142,7 +137,7 @@ const AdminLogin: React.FC = props => {
           <Button color={'primary'}>LOGIN</Button>
         </div>
       </form>
-    </Login>
+    </LoginBase>
   );
 };
 

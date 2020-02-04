@@ -11,6 +11,11 @@ export const AppRoutes = [
     action: UserController.getUsers
   },
   {
+    path: '/register/user',
+    method: 'post',
+    action: UserController.addUser
+  },
+  {
     path: '/volunteers',
     method: 'get',
     action: VolunteerController.getVolunteers
