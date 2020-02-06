@@ -1,0 +1,36 @@
+.volunteerNames {
+  width: 375px;
+}
+
+.membership {
+  width: 250px;
+}
+
+.item {
+  margin-bottom: 20px;
+}
+
+.textField {
+  width: 100%;
+}
+.select {
+  width: 100%;
+}
+
+.paper {
+  padding: 20px;
+}
+
+.receiveFunds {
+  margin-bottom: 20px;
+  .receiveFundsText {
+    margin-right: 20px;
+    display: inline-block;
+    width: 250px;
+  }
+  
+  .receiveFundsRadioGroup {
+    display: inline-block;
+  }
+}
+

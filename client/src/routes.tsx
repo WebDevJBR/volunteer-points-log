@@ -2,12 +2,9 @@ import Landing from './components/Landing/Landing';
 import UserLogin from './components/Login/UserLogin/UserLogin';
 import AdminLogin from './components/Login/AdminLogin/AdminLogin';
 import AddUser from './components/Register/AddUser/AddUser';
+import AddVolunteer from './components/Register/AddVolunteer/AddVolunteer';
 
 const routes = [
-  {
-    path: '/landing',
-    component: Landing
-  },
   {
     path: '/login/user',
     component: UserLogin
@@ -17,8 +14,16 @@ const routes = [
     component: AdminLogin
   },
   {
+    path: '/landing',
+    component: Landing
+  },
+  {
     path: '/register/user',
     component: AddUser
+  },
+  {
+    path: '/register/volunteer',
+    component: AddVolunteer
   }
 ];
 
