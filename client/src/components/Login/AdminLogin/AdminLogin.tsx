@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 
+import { Button, TextField } from '../../../shared/Input';
 import LoginBase from '../../../hoc/LoginBase/LoginBase';
-import TextField from '../../../shared/Input/TextField/TextField';
-import Button from '../../../shared/Input/Button/Button';
 import classes from './AdminLogin.module.scss';
 
 interface IControls {

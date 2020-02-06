@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { NativeSelect, Input } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import LoginBase from '../../../hoc/LoginBase/LoginBase';
-
-import ApiService from '../../../shared/Services/ApiService';
-import Button from '../../../shared/Input/Button/Button';
-import IUser from '../../../shared/Interfaces/IUser';
-import classes from './UserLogin.module.scss';
-import { ApiEndpoints } from '../../../shared/Constants/ApiEndpoints';
 import { useHistory } from 'react-router-dom';
+
+import { ApiService } from '../../../shared/Services';
+import { Button } from '../../../shared/Input';
+import { IUser } from '../../../shared/Interfaces';
+import { ApiEndpoints } from '../../../shared/Constants';
+import LoginBase from '../../../hoc/LoginBase/LoginBase';
+import classes from './UserLogin.module.scss';
 
 const useNativeSelectStyles = makeStyles({
   root: {
