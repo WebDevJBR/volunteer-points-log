@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   FormControl,
   FormControlLabel,
@@ -8,31 +8,25 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 
 import TextField from '../../shared/Input/TextField/TextField';
-import { Button, Select } from '../../shared/Input/';
-import PageBase from '../../hoc/PageBase/PageBase';
-import classes from './VolunteerEdit.module.scss';
+import { Button, Select } from '../../shared/Input';
+import PageBase from '../PageBase/PageBase'
+import {
+  IKingdom,
+  ILocalGroup,
+  IVolunteer
+} from '../../shared/Interfaces/Volunteer/IVolunteer';
+import classes from './VolunteerBase.module.scss';
 
-interface IKingdom {
-  id: number;
-  name: string;
-}
-
-interface ILocalGroup {
-  id: number;
-  name: string;
-}
-
-interface IState {
-  name: string;
-  mka: string;
-  membershipNumber?: number;
-  kingdomList: IKingdom[] | [];
-  selectedKingdom: IKingdom | {};
-  localGroupList: ILocalGroup[] | [];
-  selectedLocalGroup?: ILocalGroup | {};
-  toReceiveFundsOther?: string;
-  toReceiveFundsSelect?: string;
-  toReceiveFundsDisabled: boolean;
+interface IProps {
+  selectChange: () => void;
+  textChange: (key: any, value: string) => void;
+  radioChange: (value: string) => void;
+  kingdoms: IKingdom[];
+  localGroups: ILocalGroup[];
+  volunteer: Partial<IVolunteer>;
+  receiveFundsDisabled: boolean;
+  receiveFundsRadio: string | undefined;
+  receiveFundsText: string | undefined;
 }
 
 const useFormControlStyles = makeStyles({
@@ -47,52 +41,20 @@ const useRadioStyles = makeStyles({
   }
 });
 
-const VolunteerEdit: React.FC = () => {
-  const [state, setState] = useState<IState>({
-    name: '',
-    mka: '',
-    membershipNumber: undefined,
-    kingdomList: [],
-    selectedKingdom: {},
-    localGroupList: [],
-    selectedLocalGroup: {},
-    toReceiveFundsOther: '',
-    toReceiveFundsSelect: 'kingdom',
-    toReceiveFundsDisabled: true
-  });
-
+const VolunteerBase: React.FC<IProps> = props => {
   const formControlStyles = useFormControlStyles();
   const radioStyles = useRadioStyles();
 
-  useEffect(() => {
-    const toReceiveFundsDisabled =
-      state.toReceiveFundsSelect !== 'other' ? true : false;
-
-    setState((prevState: IState) => {
-      return {
-        ...prevState,
-        toReceiveFundsDisabled
-      };
-    });
-  }, [state.toReceiveFundsSelect]);
-
-  const handleChange = (name: keyof typeof state) => (
-    event: React.ChangeEvent<{ value: unknown }>
+  const handleTextChange = (key: any) => (
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setState({
-      ...state,
-      [name]: event.target.value
-    });
+    props.textChange(key, (event.target as HTMLInputElement).value);
   };
 
   const handleRadioSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('Radio Select: ', event.currentTarget.value);
-    setState((prevState: IState) => {
-      return {
-        ...prevState,
-        toReceiveFundsSelect: (event.target as HTMLInputElement).value
-      };
-    });
+    const value = (event.target as HTMLInputElement).value;
+
+    props.radioChange(value);
   };
 
   return (
@@ -100,8 +62,8 @@ const VolunteerEdit: React.FC = () => {
       <div className={classes.volunteerNames}>
         <div className={classes.item}>
           <TextField
-            value={state.name}
-            onChange={handleChange('name')}
+            value={props.volunteer.name || ''}
+            onChange={handleTextChange('name')}
             className={classes.textField}
             variant='outlined'
             title='Name'
@@ -110,8 +72,8 @@ const VolunteerEdit: React.FC = () => {
         </div>
         <div className={classes.item}>
           <TextField
-            value={state.mka}
-            onChange={handleChange('mka')}
+            value={props.volunteer.mka || ''}
+            onChange={handleTextChange('mka')}
             className={classes.textField}
             variant='outlined'
             title='MKA'
@@ -123,8 +85,8 @@ const VolunteerEdit: React.FC = () => {
       <div className={classes.membership}>
         <div className={classes.item}>
           <TextField
-            value={state.membershipNumber}
-            onChange={handleChange('membershipNumber')}
+            value={props.volunteer.membershipNumber || ''}
+            onChange={handleTextChange('membershipNumber')}
             className={classes.textField}
             variant='outlined'
             title='Membership #'
@@ -157,12 +119,14 @@ const VolunteerEdit: React.FC = () => {
           title='To Receive Funds'
           className={`${classes.receiveFundsText} ${classes.textField}`}
           variant='outlined'
-          disabled={state.toReceiveFundsDisabled}
+          disabled={props.receiveFundsDisabled}
+          value={props.receiveFundsText || ''}
+          onChange={handleTextChange('toReceiveFundsText')}
         ></TextField>
         <FormControl>
           <RadioGroup
             className={classes.receiveFundsRadioGroup}
-            value={state.toReceiveFundsSelect}
+            value={props.receiveFundsRadio}
             onChange={handleRadioSelect}
             row
           >
@@ -214,4 +178,4 @@ const VolunteerEdit: React.FC = () => {
   );
 };
 
-export default VolunteerEdit;
+export default VolunteerBase;
