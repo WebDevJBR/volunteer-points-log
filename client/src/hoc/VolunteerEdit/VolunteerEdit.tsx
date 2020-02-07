@@ -8,8 +8,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 
 import TextField from '../../shared/Input/TextField/TextField';
-import Button from '../../shared/Input/Button/Button';
-import Select from '../../shared/Input/Select/Select';
+import { Button, Select } from '../../shared/Input/';
 import PageBase from '../../hoc/PageBase/PageBase';
 import classes from './VolunteerEdit.module.scss';
 

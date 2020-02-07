@@ -2,7 +2,7 @@ import React from 'react';
 import MuiSelect from '@material-ui/core/Select';
 import { makeStyles } from '@material-ui/core/styles';
 
-import ISelect from '../../Interfaces/ISelect';
+import { ISelect } from '../../Interfaces/';
 import classes from './Select.module.scss';
 
 interface ISelectProps {

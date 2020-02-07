@@ -1,8 +1,8 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import Button from '../../shared/Input/Button/Button';
-import { ApiEndpoints } from '../../shared/Constants/ApiEndpoints';
+import { Button } from '../../shared/Input';
+import { ApiEndpoints } from '../../shared/Constants';
 import LoginBase from '../../hoc/LoginBase/LoginBase';
 import classes from './Landing.module.scss';
 

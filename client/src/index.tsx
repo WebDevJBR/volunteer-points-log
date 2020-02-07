@@ -5,10 +5,13 @@ import { BrowserRouter } from 'react-router-dom';
 import './index.scss';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import { SnackbarProvider } from './store/Reducers';
 
 const app = (
   <BrowserRouter>
-    <App />
+    <SnackbarProvider>
+      <App />
+    </SnackbarProvider>
   </BrowserRouter>
 );
 

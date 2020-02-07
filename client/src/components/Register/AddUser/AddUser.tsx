@@ -1,29 +1,30 @@
 import React, { useState } from 'react';
-import { Snackbar } from '@material-ui/core';
-import { Alert, Color } from '@material-ui/lab';
-
-import LoginBase from '../../../hoc/LoginBase/LoginBase';
-import TextField from '../../../shared/Input/TextField/TextField';
-import Button from '../../../shared/Input/Button/Button';
-import ApiService from '../../../shared/Services/ApiService';
-import { ApiEndpoints } from '../../../shared/Constants/ApiEndpoints';
 import { useHistory } from 'react-router-dom';
 
+import { Button, TextField } from '../../../shared/Input';
+import { ApiService } from '../../../shared/Services';
+import { ApiEndpoints } from '../../../shared/Constants';
+import { useStore } from '../../../store';
+import { SnackbarActions } from '../../../store/Actions';
+import LoginBase from '../../../hoc/LoginBase/LoginBase';
 import classes from './AddUser.module.scss';
 
 interface IState {
   username: string;
-  isSnackbarOpen: boolean;
-  snackbarSeverity: Color;
-  snackbarMessage: string;
 }
 
 const AddUser: React.FC = props => {
+  const globalState = useStore();
+
+  const ctx = {
+    snackbar: {
+      state: globalState.state,
+      dispatch: globalState.dispatch
+    }
+  };
+
   const [state, setState] = useState<IState>({
-    username: '',
-    isSnackbarOpen: false,
-    snackbarSeverity: 'success',
-    snackbarMessage: ''
+    username: ''
   });
 
   const history = useHistory();
@@ -59,33 +60,22 @@ const AddUser: React.FC = props => {
 
           setState({
             ...state,
-            username: '',
-            isSnackbarOpen: true,
-            snackbarSeverity: success === true ? 'success' : 'error',
-            snackbarMessage: alertMessage
+            username: ''
           });
 
+          ctx.snackbar.dispatch(
+            SnackbarActions.setSnackbar({
+              isSnackbarOpen: true,
+              snackbarSeverity: success === true ? 'success' : 'error',
+              snackbarMessage: alertMessage
+            })
+          );
+
           if (success) {
-            setTimeout(() => {
-              history.push(ApiEndpoints.UserLogin);
-            }, 2000);
+            history.push(ApiEndpoints.UserLogin);
           }
         });
     }
-  };
-
-  const handleSnackbarClose = (
-    event?: React.SyntheticEvent,
-    reason?: string
-  ) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setState({
-      ...state,
-      isSnackbarOpen: false
-    });
   };
 
   return (
@@ -107,16 +97,6 @@ const AddUser: React.FC = props => {
           SAVE
         </Button>
       </div>
-      <Snackbar
-        open={state.isSnackbarOpen}
-        autoHideDuration={5000}
-        onClose={handleSnackbarClose}
-        anchorOrigin={{ horizontal: 'center', vertical: 'top' }}
-      >
-        <Alert onClose={handleSnackbarClose} severity={state.snackbarSeverity}>
-          {state.snackbarMessage}
-        </Alert>
-      </Snackbar>
     </LoginBase>
   );
 };
