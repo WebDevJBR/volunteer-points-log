@@ -1,3 +1,20 @@
+.titleContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  .title {
+    flex: 0 0 auto;
+    font-weight: 600;
+  }
+  .horizontalRule {
+    flex: 1 1 auto;
+    margin-left: 10px;
+    hr {
+      border: 1px solid black;
+    }
+  }
+}
+
 .volunteerNames {
   width: 375px;
 }
@@ -17,10 +34,6 @@
   width: 100%;
 }
 
-.paper {
-  padding: 20px;
-}
-
 .receiveFunds {
   margin-bottom: 20px;
   .receiveFundsText {
@@ -28,9 +41,8 @@
     display: inline-block;
     width: 250px;
   }
-  
+
   .receiveFundsRadioGroup {
     display: inline-block;
   }
 }
-
