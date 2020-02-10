@@ -1,4 +1,4 @@
-import Landing from './components/Landing/Landing';
+import Login from './components/Login/Login';
 import UserLogin from './components/Login/UserLogin/UserLogin';
 import AdminLogin from './components/Login/AdminLogin/AdminLogin';
 import AddUser from './components/Register/AddUser/AddUser';
@@ -14,8 +14,8 @@ const routes = [
     component: AdminLogin
   },
   {
-    path: '/landing',
-    component: Landing
+    path: '/login',
+    component: Login
   },
   {
     path: '/register/user',
