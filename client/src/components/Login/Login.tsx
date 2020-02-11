@@ -4,9 +4,9 @@ import { useHistory } from 'react-router-dom';
 import { Button } from '../../shared/Input';
 import { ApiEndpoints } from '../../shared/Constants';
 import LoginBase from '../../hoc/LoginBase/LoginBase';
-import classes from './Landing.module.scss';
+import classes from './Login.module.scss';
 
-const Landing: React.FC = props => {
+const Login: React.FC = props => {
   const history = useHistory();
 
   const handleNavigate = (path: string) => {
@@ -38,4 +38,4 @@ const Landing: React.FC = props => {
   );
 };
 
-export default Landing;
+export default Login;
