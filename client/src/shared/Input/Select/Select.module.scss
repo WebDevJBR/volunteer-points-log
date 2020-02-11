@@ -1,4 +1,6 @@
-@import '../../../variables.scss';
+.required {
+  color: red;
+}
 
 .title {
   text-align: left;
@@ -19,8 +21,4 @@
 .titleDisabled {
   @extend .title;
   @extend .titleLight;
-}
-
-.required {
-  color: red;
 }
