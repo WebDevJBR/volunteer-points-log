@@ -2,7 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
 import { Volunteer } from "./Volunteer";
 
 @Entity()
-export class ToReceivedFundsType_REF {
+export class ToReceiveFundsType_REF {
   @PrimaryGeneratedColumn()
   id: number;
 

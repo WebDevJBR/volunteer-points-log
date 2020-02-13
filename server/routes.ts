@@ -4,8 +4,8 @@ import KingdomController from './controller/KingdomController';
 import DepartmentController from './controller/DepartmentController';
 import LocalGroupController from './controller/LocalGroupController';
 import DateRangeController from './controller/DateRangeController';
+import toReceiveFundsTypeController from './controller/toReceiveFundsTypeController';
 import VolunteerTimeEntryController from './controller/VolunteerTimeEntryController';
-
 /**
  * All application routes
  */
@@ -129,6 +129,26 @@ export const AppRoutes = [
     path: '/date-range/:id',
     method: 'delete',
     action: DateRangeController.deleteDateRange
+  },
+  {
+    path: '/funds-type',
+    method: 'get',
+    action: toReceiveFundsTypeController.getFundsTypes
+  },
+  {
+    path: '/funds-type',
+    method: 'post',
+    action: toReceiveFundsTypeController.addFundsType
+  },
+  {
+    path: '/funds-type',
+    method: 'put',
+    action: toReceiveFundsTypeController.updateFundsType
+  },
+  {
+    path: '/funds-type',
+    method: 'delete',
+    action: toReceiveFundsTypeController.deleteFundsType
   },
   {
     path: '/volunteers/time-entry',
