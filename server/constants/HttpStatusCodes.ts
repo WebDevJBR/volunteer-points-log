@@ -8,5 +8,6 @@ export enum HttpStatusCodes {
      * 4xx Statuses
      */
     BadRequest = 400,
+    NotFound = 404,
     Conflict = 409
 }

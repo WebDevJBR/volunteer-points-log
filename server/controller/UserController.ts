@@ -28,27 +28,50 @@ export default class UserController {
    * @param response The HTTP response.
    */
   static async addUser(request: Request, response: Response): Promise<void> {
+    const newUser = new User();
     const userRepo: Repository<User> = getManager().getRepository(User);
     const username: string = request.body.username as string;
     const existingUser: User = await userRepo.findOne({
       where: { name: Like(username) }
     });
 
-    let newUser: User;
-
     if (existingUser) {
       response
-        .sendStatus(HttpStatusCodes.Conflict)
+        .status(HttpStatusCodes.Conflict)
         .json('A matching user already exists.');
       return;
     }
 
-    newUser = new User();
     newUser.name = username;
     newUser.admin = false;
 
     await userRepo.save(newUser);
 
     response.sendStatus(HttpStatusCodes.Ok);
+  }
+
+  /**
+   * Deletes a single user from the database
+   * given the ID in the query string.
+   *
+   * @param request The HTTP Request Object
+   * @param response The HTTP Response Object
+   */
+  static async deleteUser(request: Request, response: Response): Promise<void> {
+    const userRepo: Repository<User> = getManager().getRepository(User);
+    const id = request.query.id;
+    const user = await userRepo.findOne(id);
+
+    if (user) {
+      await userRepo.remove(user);
+
+      response
+        .status(HttpStatusCodes.Ok)
+        .json(`User with ID: ${id} deleted successfully.`);
+      return;
+    }
+    response
+      .status(HttpStatusCodes.NotFound)
+      .json(`User with ID: ${id} not found.`);
   }
 }
