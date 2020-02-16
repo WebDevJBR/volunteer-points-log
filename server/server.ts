@@ -5,6 +5,8 @@ import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import { AppRoutes } from './routes';
 import * as path from 'path';
+import * as passport from 'passport';
+import * as passportLocal from 'passport-local';
 
 createConnection()
   .then(async connection => {
@@ -20,6 +22,16 @@ createConnection()
      * Parses incoming requests bodies as JSON.
      */
     app.use(bodyParser.json());
+
+    /**
+     * Middleware that initializes PassportJs.
+     */
+    app.use(passport.initialize());
+
+    /**
+     * Passport middleware that enables persistent login sessions.
+     */
+    app.use(passport.session());
 
     /**
      * Serve static React app files.
