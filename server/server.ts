@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { createConnection, Repository, getManager } from 'typeorm';
+import { createConnection, Repository, getManager, Like } from 'typeorm';
 import { Request, Response } from 'express';
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
@@ -52,41 +52,33 @@ createConnection()
       done(null, user);
     });
 
-    // /**
-    //  * Ensures that the passport middleware uses the Local strategy.
-    //  */
-    // passport.use('login',
-    //   new LocalStrategy(((username, password, done) => {
-    //     let hash: string;
-    //     // const user: User = await userRepo.findOne({
-    //     //   where: {
-    //     //     name: username.toLowerCase()
-    //     //   }
-    //     // });
+    /**
+     * Ensures that the passport middleware uses the Local strategy.
+     */
+    passport.use(new LocalStrategy(async (username, password, done) => {
+        let hash: string;
+        const user: User = await userRepo.findOne({
+          where: {
+            name: Like(username)
+          }
+        });
 
-    //     // if (!user) {
-    //     //   return done(undefined, false, {
-    //     //     message: `User ${username} was not found.`
-    //     //   });
-    //     // }
+        if (!user) {
+          return done(undefined, false, {
+            message: `User ${username} was not found.`
+          });
+        }
 
-    //     // hash = hashPassword(password, user.salt);
-    //     // if (user.password === hash) {
-    //     //   return done(undefined, user);
-    //     // }
+        hash = hashPassword(password, user.salt);
+        if (user.password === hash) {
+          return done(undefined, user);
+        }
 
-    //     return done(undefined, false, {
-    //       message: 'Invalid username or password.'
-    //     });
-    //   })
-    // );
-
-    passport.use(new LocalStrategy(
-      function(username, password, done) {
-        var x = 10;
-        console.log(x);
-      }
-    ));
+        return done(undefined, false, {
+          message: 'Invalid username or password.'
+        });
+      })
+    );
 
     /**
      * Parses incoming requests bodies as JSON.

@@ -9,20 +9,6 @@ const LocalStrategy = passportLocal.Strategy;
 const userRepo: Repository<User> = getManager().getRepository(User);
 
 /**
- * Produces a SHA256 hash using the given password and salt.
- * @param password The password to hash.
- * @param salt The salt to use with the password,
- */
-const hashPassword = (password: string, salt: string) => {
-  const hash = crypto.createHash('sha256');
-
-  hash.update(password);
-  hash.update(salt);
-
-  return hash.digest('hex');
-}
-
-/**
  * Serializes the user's id to be stored in the browser as a cookie.
  */
 passport.serializeUser<any, any>((user, done) => {

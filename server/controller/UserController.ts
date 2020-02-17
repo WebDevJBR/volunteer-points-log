@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { getManager, Like, Repository } from 'typeorm';
 import { User } from '../entity/User';
 import { HttpStatusCodes } from '../constants/HttpStatusCodes';
+import CryptoHelper from '../utils/cryptoHelper'
 
 /**
  * Handles calls from the 'users' route.
@@ -43,6 +44,7 @@ export default class UserController {
     }
 
     newUser.name = username;
+    newUser.password = CryptoHelper.
     newUser.admin = false;
 
     await userRepo.save(newUser);
