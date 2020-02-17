@@ -4,6 +4,7 @@ import KingdomController from './controller/KingdomController';
 import DepartmentController from './controller/DepartmentController';
 import LocalGroupController from './controller/LocalGroupController';
 import DateRangeController from './controller/DateRangeController';
+import VolunteerTimeEntryController from './controller/VolunteerTimeEntryController';
 
 /**
  * All application routes
@@ -128,5 +129,25 @@ export const AppRoutes = [
     path: '/date-range/:id',
     method: 'delete',
     action: DateRangeController.deleteDateRange
+  },
+  {
+    path: '/volunteers/time-entry',
+    method: 'post',
+    action: VolunteerTimeEntryController.addTimeEntry
+  },
+  {
+    path: '/volunteers/time-entry',
+    method: 'get',
+    action: VolunteerTimeEntryController.getTimeEntries
+  },
+  {
+    path: '/volunteers/time-entry',
+    method: 'put',
+    action: VolunteerTimeEntryController.updateTimeEntry
+  },
+  {
+    path: '/volunteers/time-entry',
+    method: 'delete',
+    action: VolunteerTimeEntryController.deleteTimeEntry
   }
 ];
