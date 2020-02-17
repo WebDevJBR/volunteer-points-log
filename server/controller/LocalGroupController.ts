@@ -14,9 +14,14 @@ export default class LocalGroupController {
    * @param res The HTTP Response Object
    */
   static async getLocalGroups(req: Request, res: Response): Promise<void> {
-    const localGroups = await getManager()
-      .getRepository(LocalGroup)
-      .find();
+    const kingdom = req.query.kingdom || '';
+    const localGroupRepo: Repository<LocalGroup> = getManager().getRepository(
+      LocalGroup
+    );
+
+    const localGroups = await localGroupRepo.find({
+      where: {kingdom: Like(`%${kingdom}%`)}
+    });
 
     res.send(localGroups);
   }
@@ -44,7 +49,8 @@ export default class LocalGroupController {
       return;
     }
 
-    localgroup.name = name;
+    localgroup.name = req.body.name;
+    localgroup.kingdom = req.body.kingdom;
 
     await lgRepo.save(localgroup);
 
@@ -68,7 +74,7 @@ export default class LocalGroupController {
       where: { name: Like(newName) }
     });
 
-    if (existingLG) {
+    if (existingLG && existingLG.id !== id) {
       res
         .status(HttpStatusCodes.Conflict)
         .json(`A Local Group with the name '${newName}' already exists.`);
@@ -95,7 +101,7 @@ export default class LocalGroupController {
     const lgRepo: Repository<LocalGroup> = getManager().getRepository(
       LocalGroup
     );
-    const id = req.query.id;
+    const id = req.params.id;
     const localgroup = await lgRepo.findOne(id);
 
     if (localgroup) {
