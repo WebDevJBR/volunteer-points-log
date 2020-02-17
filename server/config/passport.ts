@@ -4,7 +4,6 @@ import * as crypto from 'crypto';
 
 import { getManager, Repository, OneToMany } from 'typeorm';
 import { User } from '../entity/User';
-import { isUndefined } from 'util';
 
 const LocalStrategy = passportLocal.Strategy;
 const userRepo: Repository<User> = getManager().getRepository(User);
