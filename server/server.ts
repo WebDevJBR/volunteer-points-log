@@ -1,15 +1,15 @@
 import 'reflect-metadata';
 import { createConnection, Repository, getManager, Like } from 'typeorm';
 import { Request, Response } from 'express';
+import session from 'express-session';
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import { AppRoutes } from './routes';
 import * as path from 'path';
 import * as passport from 'passport';
 import * as passportLocal from 'passport-local';
-import * as crypto from 'crypto';
-
 import { User } from './entity/User';
+import CryptoHelper from './utils/cryptoHelper';
 
 createConnection()
   .then(async connection => {
@@ -22,20 +22,6 @@ createConnection()
     const port = process.env.PORT || 5000;
     const LocalStrategy = passportLocal.Strategy;
     const userRepo: Repository<User> = getManager().getRepository(User);
-
-    /**
-     * Produces a SHA256 hash using the given password and salt.
-     * @param password The password to hash.
-     * @param salt The salt to use with the password,
-     */
-    const hashPassword = (password: string, salt: string) => {
-      const hash = crypto.createHash('sha256');
-
-      hash.update(password);
-      hash.update(salt);
-
-      return hash.digest('hex');
-    };
 
     /**
      * Serializes the user's id to be stored in the browser as a cookie.
@@ -55,7 +41,8 @@ createConnection()
     /**
      * Ensures that the passport middleware uses the Local strategy.
      */
-    passport.use(new LocalStrategy(async (username, password, done) => {
+    passport.use(
+      new LocalStrategy(async (username, password, done) => {
         let hash: string;
         const user: User = await userRepo.findOne({
           where: {
@@ -69,7 +56,7 @@ createConnection()
           });
         }
 
-        hash = hashPassword(password, user.salt);
+        hash = CryptoHelper.hashPassword(password, user.salt);
         if (user.password === hash) {
           return done(undefined, user);
         }
@@ -84,6 +71,11 @@ createConnection()
      * Parses incoming requests bodies as JSON.
      */
     app.use(bodyParser.json());
+
+    /**
+     * Initialize the session middleware.
+     */
+    app.use(session({ secret: 'JBR_SESSION_SECRET' }));
 
     /**
      * Middleware that initializes PassportJs.
@@ -101,7 +93,7 @@ createConnection()
     app.use(express.static(path.join(__dirname, 'client')));
 
     /**
-     * 
+     *
      */
     app.post(
       '/login',
@@ -118,24 +110,24 @@ createConnection()
       app[route.method](
         route.path,
         (request: Request, response: Response, next: Function) => {
-          if (request.isAuthenticated()) {
-            route
-              .action(request, response)
-              .then(() => next)
-              .catch(err => next(err));
-          }
+          // if (request.isAuthenticated()) {
+          route
+            .action(request, response)
+            .then(() => next)
+            .catch(err => next(err));
+          // }
 
-          response.redirect('/login');
+          // response.redirect('/login');
         }
       );
     });
 
-    // /**
-    //  * Any unregistered routes should be directed to the React app.
-    //  */
-    // app.get('*', (req, res) => {
-    //   res.sendFile(path.join(`${__dirname}/client/index.html`));
-    // });
+    /**
+     * Any unregistered routes should be directed to the React app.
+     */
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(`${__dirname}/client/index.html`));
+    });
 
     /**
      * Begin listening for incoming requests.

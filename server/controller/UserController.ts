@@ -2,7 +2,8 @@ import { Request, Response } from 'express';
 import { getManager, Like, Repository } from 'typeorm';
 import { User } from '../entity/User';
 import { HttpStatusCodes } from '../constants/HttpStatusCodes';
-import CryptoHelper from '../utils/cryptoHelper'
+import CryptoHelper from '../utils/cryptoHelper';
+import passport = require('passport');
 
 /**
  * Handles calls from the 'users' route.
@@ -29,10 +30,22 @@ export default class UserController {
    * @param response The HTTP response.
    */
   static async addUser(request: Request, response: Response): Promise<void> {
-    const newUser = new User();
+    const newUser: User = new User();
     const userRepo: Repository<User> = getManager().getRepository(User);
     const username: string = request.body.username as string;
-    const existingUser: User = await userRepo.findOne({
+    const password: string = request.body.password as string;
+
+    let existingUser: User;
+    let salt: string;
+
+    if (!username || !password) {
+      response
+        .status(HttpStatusCodes.BadRequest)
+        .json('You must provide a username and password.');
+      return;
+    }
+
+    existingUser = await userRepo.findOne({
       where: { name: Like(username) }
     });
 
@@ -43,8 +56,11 @@ export default class UserController {
       return;
     }
 
+    salt = CryptoHelper.generateSalt();
+
     newUser.name = username;
-    newUser.password = CryptoHelper.
+    newUser.password = CryptoHelper.hashPassword(password, salt);
+    newUser.salt = salt;
     newUser.admin = false;
 
     await userRepo.save(newUser);

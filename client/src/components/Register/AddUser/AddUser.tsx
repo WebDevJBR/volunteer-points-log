@@ -47,9 +47,14 @@ const AddUser: React.FC = props => {
 
     if (isFormValid) {
       const username = state.username;
+
+      // Note: Version one of the application doesn't use a password
+      // for non-admin users.
+      const password = "NonAdminUsersDontHavePasswords";
+
       let success: boolean;
 
-      await ApiService.post(ApiEndpoints.AddUser, { username })
+      await ApiService.post(ApiEndpoints.AddUser, { username, password })
         .then(value => (success = true))
         .catch(err => (success = false))
         .finally(() => {
