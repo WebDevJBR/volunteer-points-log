@@ -1,13 +1,13 @@
 import 'reflect-metadata';
-import { createConnection, Repository, getManager, Like } from 'typeorm';
-import { Request, Response } from 'express';
 import * as session from 'express-session';
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
-import { AppRoutes } from './routes';
 import * as path from 'path';
 import * as passport from 'passport';
 import * as passportLocal from 'passport-local';
+import { createConnection, Repository, getManager, Like } from 'typeorm';
+import { Request, Response } from 'express';
+import { AppRoutes } from './routes';
 import { User } from './entity/User';
 import CryptoHelper from './utils/cryptoHelper';
 
@@ -93,7 +93,7 @@ createConnection()
     app.use(express.static(path.join(__dirname, 'client')));
 
     /**
-     *
+     * Handles authentication requests.
      */
     app.post(
       '/login',
@@ -111,13 +111,13 @@ createConnection()
         route.path,
         (request: Request, response: Response, next: Function) => {
           // if (request.isAuthenticated()) {
-          route
-            .action(request, response)
-            .then(() => next)
-            .catch(err => next(err));
+            route
+              .action(request, response)
+              .then(() => next)
+              .catch(err => next(err));
+          // } else {
+          //   response.redirect('/login');
           // }
-
-          // response.redirect('/login');
         }
       );
     });

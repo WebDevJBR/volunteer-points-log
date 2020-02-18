@@ -9,6 +9,9 @@ import { IUser } from '../../../shared/Interfaces';
 import { ApiEndpoints } from '../../../shared/Constants';
 import LoginBase from '../../../hoc/LoginBase/LoginBase';
 import classes from './UserLogin.module.scss';
+import { useStore } from '../../../store';
+import { SnackbarActions } from '../../../store/Actions';
+import { LoginConstants } from '../../../shared/Constants/Misc/LoginConstants';
 
 const useNativeSelectStyles = makeStyles({
   root: {
@@ -35,6 +38,14 @@ const UserLogin: React.FC = props => {
   const nativeSelectStyles = useNativeSelectStyles();
   const inputStyles = useInputStyles();
   const history = useHistory();
+  const globalState = useStore();
+
+  const context = {
+    snackbar: {
+      state: globalState.state,
+      dispatch: globalState.dispatch
+    }
+  };
 
   let selectOptions: object[] = [];
 
@@ -72,11 +83,32 @@ const UserLogin: React.FC = props => {
     });
   }
 
-  const handleLogin = () => {
-    console.log('Logging in selected user', (state.selectedUser as IUser).name);
+  const handleLogin = async () => {
+    let user: IUser = state.selectedUser as IUser;
+    console.log('Logging in selected user', user.name);
+
+    await ApiService.post(ApiEndpoints.Login, {
+      username: user.name,
+      password: LoginConstants.NonAdminUserPassword
+    })
+      .catch(err => {
+        console.error('Login failure:', err);
+
+        context.snackbar.dispatch(
+          SnackbarActions.setSnackbar({
+            isSnackbarOpen: true,
+            snackbarSeverity: 'error',
+            snackbarMessage: 'Login failure.'
+          })
+        );
+      })
+      .then(() => {
+        console.log('Login success!');
+        history.push('/userlanding');
+      });
   };
 
-  const handleAddUser = () => handleNavigate(ApiEndpoints.AddUser);
+  const handleAddUser = () => handleNavigate('/register/user');
 
   const handleChange = (name: keyof typeof state) => (
     event: React.ChangeEvent<{ value: unknown }>
@@ -125,7 +157,7 @@ const UserLogin: React.FC = props => {
               ></Input>
             }
           >
-            <option value='' disabled></option>
+            <option value="" disabled></option>
             {selectOptions.map(option => option)}
           </NativeSelect>
         </div>
@@ -137,14 +169,14 @@ const UserLogin: React.FC = props => {
             disabled={
               Object.keys(state.selectedUser).length === 0 ? true : false
             }
-            color='primary'
+            color="primary"
             onClick={handleLogin}
           >
             LOGIN
           </Button>
         </div>
         <div className={classes.item}>
-          <Button color='secondary' onClick={handleAddUser}>
+          <Button color="secondary" onClick={handleAddUser}>
             ADD
           </Button>
         </div>

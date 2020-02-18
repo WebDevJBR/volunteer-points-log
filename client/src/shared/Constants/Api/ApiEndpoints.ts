@@ -9,6 +9,7 @@ export const ApiEndpoints = {
   AdminLogin: 'login/admin',
   GetUsers: '/users',
   AddUser: '/users',
+  Login: '/login',
 
   /**
    * Volunteers
