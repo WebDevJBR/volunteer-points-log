@@ -95,7 +95,7 @@ export default class DepartmentController {
     const deptRepo: Repository<Department> = getManager().getRepository(
       Department
     );
-    const id = req.query.id;
+    const id = req.params.id;
     const department = await deptRepo.findOne(id);
 
     if (department) {

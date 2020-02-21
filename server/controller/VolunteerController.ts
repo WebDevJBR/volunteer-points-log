@@ -17,7 +17,7 @@ export default class VolunteerController {
     request: Request,
     response: Response
   ): Promise<void> {
-    const filter = request.query.filter;
+    const filter = request.query.filter || '';
     const volunteers = await getManager()
       .getRepository(Volunteer)
       .find({
@@ -42,10 +42,11 @@ export default class VolunteerController {
     request: Request,
     response: Response
   ): Promise<void> {
-    const id = request.query.id;
-    const volunteer = await getManager()
-      .getRepository(Volunteer)
-      .findOne(id);
+    const id = request.params.id;
+    const volunteerRepo: Repository<Volunteer> = getManager().getRepository(
+      Volunteer
+    );
+    const volunteer: Volunteer = await volunteerRepo.findOne(id);
 
     response.send(volunteer);
   }
@@ -102,7 +103,7 @@ export default class VolunteerController {
       where: { mka: Like(newMka) }
     });
 
-    if (existingVolunteer) {
+    if (existingVolunteer && existingVolunteer.id !== id) {
       res
         .status(HttpStatusCodes.Conflict)
         .json(`A Volunteer with mka '${newMka}' already exists.`);
@@ -132,7 +133,7 @@ export default class VolunteerController {
     const volunteerRepo: Repository<Volunteer> = getManager().getRepository(
       Volunteer
     );
-    const id = request.query.id;
+    const id = request.params.id;
     const volunteer = await volunteerRepo.findOne(id);
 
     if (volunteer) {
