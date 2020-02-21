@@ -2,17 +2,24 @@ import React from 'react';
 import MuiSelect from '@material-ui/core/Select';
 import { makeStyles } from '@material-ui/core/styles';
 
-import { ISelect } from '../../Interfaces/';
 import classes from './Select.module.scss';
 
 interface ISelectProps {
   title?: string;
   native?: boolean;
-  value?: ISelect;
+  value?: unknown;
   required?: boolean;
   variant?: any;
   disabled?: boolean;
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?:
+    | ((
+        event: React.ChangeEvent<{
+          name?: string | undefined;
+          value: unknown;
+        }>,
+        child: React.ReactNode
+      ) => void)
+    | undefined;
 }
 
 const useSelectStyles = makeStyles({
@@ -41,7 +48,9 @@ const Select: React.FC<ISelectProps> = props => {
       {props.title ? (
         <div className={titleClass}>
           {props.title}
-          {props.required ? <span className={classes.required}>{' *'}</span> : null}
+          {props.required ? (
+            <span className={classes.required}>{' *'}</span>
+          ) : null}
         </div>
       ) : null}
       <MuiSelect
@@ -53,15 +62,10 @@ const Select: React.FC<ISelectProps> = props => {
           select: selectStyles.select,
           outlined: selectStyles.outlined
         }}
-        // value={
-        //   Object.keys(props.value).length > 0
-        //     ? (props.value as ISelect).id
-        //     : ''
-        // }
-        // onChange={props.onChange}
+        value={props.value}
+        onChange={props.onChange}
       >
-        <option value='' disabled></option>
-        {/* {selectOptions.map(option => option)} */}
+        {props.children}
       </MuiSelect>
     </>
   );

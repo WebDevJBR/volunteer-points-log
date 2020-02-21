@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react';
-import MaterialTable, { Column } from 'material-table';
+import MaterialTable, { Column, Query } from 'material-table';
 import {
   AddBox,
   ArrowDownward,
@@ -15,10 +15,16 @@ import {
   Remove,
   SaveAlt,
   Search,
-  ViewColumn
+  ViewColumn,
+  Refresh
 } from '@material-ui/icons';
 
+import { ApiService } from '../../../../../shared/Services';
+import { useStore } from '../../../../../store';
+import { SnackbarActions } from '../../../../../store/Actions';
+
 interface Row {
+  id: number;
   name: string;
 }
 
@@ -28,32 +34,125 @@ interface TableState {
 }
 
 const Kingdoms: React.FC = props => {
-  const [state, setState] = React.useState<TableState>({
+  const state = React.useState<TableState>({
     columns: [{ title: 'Kingdom Name', field: 'name' }],
-    data: [
-      { name: 'USA' },
-      { name: 'Mexico' },
-      { name: 'UK' },
-      { name: 'Germany' },
-      { name: 'France' },
-      { name: 'Brazil' },
-      { name: 'Spain' },
-      { name: 'Russia' },
-      { name: 'Japan' },
-      { name: 'China' },
-      { name: 'Italy' },
-      { name: 'Canada' },
-      { name: 'Ukraine' }
-    ]
-  });
+    data: []
+  })[0];
+
+  const globalState = useStore();
+
+  const ctx = {
+    snackbar: {
+      state: globalState.state,
+      dispatch: globalState.dispatch
+    }
+  };
+
+  const tableRef = React.createRef<any>();
+
+  const fetchData = async (query: Query<Row>) => {
+    const orderBy = query?.orderBy?.field ? query.orderBy.field : 'id';
+    const orderDirection = query?.orderDirection
+      ? query.orderDirection.toUpperCase()
+      : 'ASC';
+    const search = query?.search ? query.search : '';
+    const url = 'http://localhost:5000/kingdoms';
+
+    return await ApiService.get(url, {
+      per_page: query.pageSize,
+      page: query.page + 1,
+      orderBy: orderBy,
+      orderDirection: orderDirection,
+      search: search
+    }).then((res: any) => {
+      return {
+        data: res.data,
+        page: res.page - 1,
+        totalCount: res.total
+      };
+    });
+  };
+
+  const addRecord = async (newData: Row) => {
+    if (newData.name === undefined) {
+      return;
+    }
+
+    let success: boolean;
+
+    return await ApiService.post('http://localhost:5000/kingdoms', {
+      name: newData.name
+    })
+      .then(() => (success = true))
+      .catch(() => (success = false))
+      .finally(() => {
+        const alertMessage =
+          success === true
+            ? `Kingdom ${newData.name} was successfully created!`
+            : `Failed to create Kingdom ${newData.name}. The Kingdom already exists.`;
+
+        showSnackbar(success, alertMessage);
+      });
+  };
+
+  const updateRecord = async (newData: Row, oldData: Row | undefined) => {
+    if (newData.name === oldData?.name && newData.id === oldData?.id) {
+      return;
+    }
+
+    let success: boolean;
+
+    return await ApiService.put(`http://localhost:5000/kingdoms`, {
+      id: oldData?.id,
+      name: newData.name
+    })
+      .then(() => (success = true))
+      .catch(() => (success = false))
+      .finally(() => {
+        const alertMessage =
+          success === true
+            ? `Kingdom ${oldData?.name} was successfully updated to ${newData.name}!`
+            : `Failed to update Kingdom ${oldData?.name} to ${newData.name}. The Kingdom already exists.`;
+        showSnackbar(success, alertMessage);
+      });
+  };
+
+  const deleteRecord = async (oldData: Row) => {
+    let success: boolean;
+
+    return await ApiService.delete(`http://localhost:5000/kingdoms`, {
+      id: oldData?.id
+    })
+      .then(() => (success = true))
+      .catch(() => (success = false))
+      .finally(() => {
+        const alertMessage =
+          success === true
+            ? `Kingdom ${oldData?.name} was successfully deleted!`
+            : `Failed to delete Kingdom ${oldData?.name}!`;
+
+        showSnackbar(success, alertMessage);
+      });
+  };
+
+  const showSnackbar = (success: boolean, alertMessage: string) => {
+    ctx.snackbar.dispatch(
+      SnackbarActions.setSnackbar({
+        isSnackbarOpen: true,
+        snackbarSeverity: success === true ? 'success' : 'error',
+        snackbarMessage: alertMessage
+      })
+    );
+  };
 
   return (
     <MaterialTable
-      title='Kingdoms'
+      title="Kingdoms"
       columns={state.columns}
-      data={state.data}
       options={{
-        actionsColumnIndex: -1
+        actionsColumnIndex: -1,
+        search: true,
+        debounceInterval: 1000
       }}
       icons={{
         Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -90,42 +189,20 @@ const Kingdoms: React.FC = props => {
           <ViewColumn {...props} ref={ref} />
         ))
       }}
+      tableRef={tableRef}
+      data={query => fetchData(query)}
+      actions={[
+        {
+          icon: () => <Refresh />,
+          tooltip: 'Refresh Data',
+          isFreeAction: true,
+          onClick: () => tableRef.current && tableRef.current.onQueryChange()
+        }
+      ]}
       editable={{
-        onRowAdd: newData =>
-          new Promise(resolve => {
-            setTimeout(() => {
-              resolve();
-              setState(prevState => {
-                const data = [...prevState.data];
-                data.push(newData);
-                return { ...prevState, data };
-              });
-            }, 600);
-          }),
-        onRowUpdate: (newData, oldData) =>
-          new Promise(resolve => {
-            setTimeout(() => {
-              resolve();
-              if (oldData) {
-                setState(prevState => {
-                  const data = [...prevState.data];
-                  data[data.indexOf(oldData)] = newData;
-                  return { ...prevState, data };
-                });
-              }
-            }, 600);
-          }),
-        onRowDelete: oldData =>
-          new Promise(resolve => {
-            setTimeout(() => {
-              resolve();
-              setState(prevState => {
-                const data = [...prevState.data];
-                data.splice(data.indexOf(oldData), 1);
-                return { ...prevState, data };
-              });
-            }, 600);
-          })
+        onRowAdd: newData => addRecord(newData),
+        onRowUpdate: (newData, oldData) => updateRecord(newData, oldData),
+        onRowDelete: oldData => deleteRecord(oldData)
       }}
     />
   );

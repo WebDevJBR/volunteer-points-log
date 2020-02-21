@@ -1,7 +1,7 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useState, useEffect, createRef } from 'react';
 import { FormControl } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import MaterialTable, { Column } from 'material-table';
+import MaterialTable, { Column, Query, MTableToolbar } from 'material-table';
 import {
   AddBox,
   ArrowDownward,
@@ -17,19 +17,26 @@ import {
   Remove,
   SaveAlt,
   Search,
-  ViewColumn
+  ViewColumn,
+  Refresh
 } from '@material-ui/icons';
 
 import { Select } from '../../../../../shared/Input';
+import { ApiService } from '../../../../../shared/Services';
+import { useStore } from '../../../../../store';
+import { SnackbarActions } from '../../../../../store/Actions';
 import classes from './LocalGroups.module.scss';
 
 interface Row {
+  id: number;
   name: string;
 }
 
 interface TableState {
   columns: Array<Column<Row>>;
   data: Row[];
+  kingdoms: Row[];
+  selectedKingdom: Row | {};
 }
 
 const useFormControlStyles = makeStyles({
@@ -39,37 +46,219 @@ const useFormControlStyles = makeStyles({
 });
 
 const LocalGroups: React.FC = props => {
-  const [state, setState] = React.useState<TableState>({
+  const [state, setState] = useState<TableState>({
     columns: [{ title: 'Local Group Name', field: 'name' }],
-    data: [
-      { name: 'Mehmet' },
-      {
-        name: 'Zerya Betül'
-      }
-    ]
+    data: [],
+    kingdoms: [],
+    selectedKingdom: {}
   });
+  const globalState = useStore();
 
   const formControlStyles = useFormControlStyles();
+
+  const ctx = {
+    snackbar: {
+      state: globalState.state,
+      dispatch: globalState.dispatch
+    }
+  };
+
+  const tableRef = createRef<any>();
+
+  let selectOptions: object[] = [];
+
+  useEffect(() => {
+    const fetchKingdoms = async () => {
+      const response: any = await ApiService.get(
+        'http://localhost:5000/kingdoms'
+      );
+
+      setState((prevState: TableState) => {
+        return {
+          ...prevState,
+          kingdoms: response.data
+        };
+      });
+    };
+
+    fetchKingdoms();
+  }, []);
+
+  useEffect(() => {
+    tableRef.current.onQueryChange();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.selectedKingdom]);
+
+  if (state.kingdoms.length > 0) {
+    selectOptions = (state.kingdoms as Row[]).map((kingdom: Row) => {
+      return (
+        <option key={kingdom.id} value={kingdom.id}>
+          {kingdom.name}
+        </option>
+      );
+    });
+  }
+
+  const handleChange = (name: keyof typeof state) => (
+    event: React.ChangeEvent<{ value: unknown }>
+  ) => {
+    // If anything other than a number, returns 'NaN'
+    const id: number = Number(event.target.value);
+
+    if (!isNaN(id)) {
+      const selectedKingdom: Row | undefined = state.kingdoms.find(
+        (kingdom: Row) => {
+          return kingdom.id === id;
+        }
+      );
+
+      // Don't set state if we couldn't find the user.
+      if (selectedKingdom !== undefined) {
+        setState((prevState: TableState) => {
+          return {
+            ...prevState,
+            [name]: selectedKingdom
+          };
+        });
+      }
+    }
+  };
+
+  const fetchData = async (query: Query<Row>) => {
+    const kingdomId = (state.selectedKingdom as Row).id || null;
+    const orderBy = query?.orderBy?.field ? query.orderBy.field : 'id';
+    const orderDirection = query?.orderDirection
+      ? query.orderDirection.toUpperCase()
+      : 'ASC';
+    const search = query?.search ? query.search : '';
+    const url = 'http://localhost:5000/local-groups';
+
+    return await ApiService.get(url, {
+      per_page: query.pageSize,
+      page: query.page + 1,
+      orderBy: orderBy,
+      orderDirection: orderDirection,
+      kingdomId: kingdomId,
+      search: search
+    }).then((res: any) => {
+      return {
+        data: res.data,
+        page: res.page - 1,
+        totalCount: res.total
+      };
+    });
+  };
+
+  const addRecord = async (newData: Row) => {
+    let alertMessage: string = '';
+    let success: boolean = false;
+
+    if (newData.name === undefined) {
+      alertMessage = 'Please enter a name for the Local Group';
+    } else if (!(state.selectedKingdom as Row).id) {
+      alertMessage = 'Please select a Kingdom before continuing.';
+    } else {
+      return await ApiService.post('http://localhost:5000/local-groups', {
+        name: newData.name,
+        kingdomId: (state.selectedKingdom as Row).id
+      })
+        .then(() => (success = true))
+        .catch(() => (success = false))
+        .finally(() => {
+          const alertMessage =
+            success === true
+              ? `Local Group ${newData.name} was successfully created!`
+              : `Failed to create Local Group ${newData.name}. The Local Group already exists.`;
+
+          showSnackbar(success, alertMessage);
+        });
+    }
+
+    showSnackbar(success, alertMessage);
+  };
+
+  const updateRecord = async (newData: Row, oldData: Row | undefined) => {
+    if (newData.name === oldData?.name && newData.id === oldData?.id) {
+      return;
+    }
+
+    let success: boolean;
+
+    return await ApiService.put(`http://localhost:5000/local-groups`, {
+      id: oldData?.id,
+      name: newData.name
+    })
+      .then(() => (success = true))
+      .catch(() => (success = false))
+      .finally(() => {
+        const alertMessage =
+          success === true
+            ? `Local Group ${oldData?.name} was successfully updated to ${newData.name}!`
+            : `Failed to update Local Group ${oldData?.name} to ${newData.name}. The Local Group already exists.`;
+        showSnackbar(success, alertMessage);
+      });
+  };
+
+  const deleteRecord = async (oldData: Row) => {
+    let success: boolean;
+
+    return await ApiService.delete(`http://localhost:5000/local-groups`, {
+      id: oldData?.id
+    })
+      .then(() => (success = true))
+      .catch(() => (success = false))
+      .finally(() => {
+        const alertMessage =
+          success === true
+            ? `Local Group ${oldData?.name} was successfully deleted!`
+            : `Failed to delete Local Group ${oldData?.name}!`;
+
+        showSnackbar(success, alertMessage);
+      });
+  };
+
+  const showSnackbar = (success: boolean, alertMessage: string) => {
+    ctx.snackbar.dispatch(
+      SnackbarActions.setSnackbar({
+        isSnackbarOpen: true,
+        snackbarSeverity: success === true ? 'success' : 'error',
+        snackbarMessage: alertMessage
+      })
+    );
+  };
 
   return (
     <>
       <div className={classes.filterBy}>
         <FormControl
-          variant='outlined'
+          variant="outlined"
           classes={{
             root: formControlStyles.root
           }}
         >
-          <Select native title='Filter By'></Select>
+          <Select
+            native
+            title="Filter By"
+            value={
+              Object.keys(state.selectedKingdom).length > 0
+                ? (state.selectedKingdom as Row).id
+                : ''
+            }
+            onChange={handleChange('selectedKingdom')}
+          >
+            <option value="" disabled></option>
+            {selectOptions.map(option => option)}
+          </Select>
         </FormControl>
       </div>
 
       <MaterialTable
-        title='Local Groups'
+        title="Local Groups"
         columns={state.columns}
-        data={state.data}
         options={{
-          actionsColumnIndex: -1
+          actionsColumnIndex: -1,
+          search: true,
+          debounceInterval: 1000
         }}
         icons={{
           Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -112,42 +301,39 @@ const LocalGroups: React.FC = props => {
             <ViewColumn {...props} ref={ref} />
           ))
         }}
+        tableRef={tableRef}
+        data={query => fetchData(query)}
+        actions={[
+          {
+            icon: () => <Refresh />,
+            tooltip: 'Refresh Data',
+            isFreeAction: true,
+            onClick: () => tableRef.current && tableRef.current.onQueryChange()
+          }
+        ]}
         editable={{
-          onRowAdd: newData =>
-            new Promise(resolve => {
-              setTimeout(() => {
-                resolve();
-                setState(prevState => {
-                  const data = [...prevState.data];
-                  data.push(newData);
-                  return { ...prevState, data };
-                });
-              }, 600);
-            }),
-          onRowUpdate: (newData, oldData) =>
-            new Promise(resolve => {
-              setTimeout(() => {
-                resolve();
-                if (oldData) {
-                  setState(prevState => {
-                    const data = [...prevState.data];
-                    data[data.indexOf(oldData)] = newData;
-                    return { ...prevState, data };
-                  });
-                }
-              }, 600);
-            }),
-          onRowDelete: oldData =>
-            new Promise(resolve => {
-              setTimeout(() => {
-                resolve();
-                setState(prevState => {
-                  const data = [...prevState.data];
-                  data.splice(data.indexOf(oldData), 1);
-                  return { ...prevState, data };
-                });
-              }, 600);
-            })
+          onRowAdd: newData => addRecord(newData),
+          onRowUpdate: (newData, oldData) => updateRecord(newData, oldData),
+          onRowDelete: oldData => deleteRecord(oldData)
+        }}
+        components={{
+          Toolbar: props => {
+            for (let i = 0; i < props.actions.length; i++) {
+              if (
+                props.actions[i].tooltip === 'Add' &&
+                props.actions[i].position === 'toolbar'
+              ) {
+                props.actions[i].disabled = !(
+                  Object.keys(state.selectedKingdom).length > 0
+                )
+                  ? true
+                  : false;
+                break;
+              }
+            }
+
+            return <MTableToolbar {...props} />;
+          }
         }}
       />
     </>

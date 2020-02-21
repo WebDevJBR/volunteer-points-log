@@ -6,6 +6,7 @@
   "scripts": {
     "start:prod": "node ./build/server.js",
     "start:dev": "nodemon -x \"npm run build && nodemon\"",
+    "start:dev-server": "nodemon -x \"npm run build:server && nodemon\"",
     "install:all": "npm run install:server && npm run install:client",
     "install:client": "cd ./client && npm install && cd ..",
     "install:server": "npm install",

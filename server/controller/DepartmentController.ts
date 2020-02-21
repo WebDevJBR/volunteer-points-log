@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { Department } from '../entity/Department';
-import { getManager, Like, Repository } from 'typeorm';
+import { getManager, Like, Repository, SelectQueryBuilder } from 'typeorm';
 import { HttpStatusCodes } from '../constants/HttpStatusCodes';
 
 /**
@@ -14,11 +14,27 @@ export default class DepartmentController {
    * @param res The HTTP Response Object
    */
   static async getDepartments(req: Request, res: Response): Promise<void> {
-    const departments = await getManager()
+    const orderBy = req.query['orderBy'] || 'id';
+    const orderDirection = req.query['orderDirection'] || 'ASC';
+    const search = req.query['search'] || '';
+    const limit = parseInt(req.query['per_page']) || 0;
+    const page = parseInt(req.query['page']) || 0;
+    const offset = (page - 1) * limit;
+    const [results, total] = await getManager()
       .getRepository(Department)
-      .find();
+      .createQueryBuilder('department')
+      .loadAllRelationIds({ relations: ['headVolunteer', 'deputyVolunteer'] })
+      .where('department.name LIKE :name', { name: '%' + search + '%' })
+      .orderBy(`department.${orderBy}`, orderDirection)
+      .skip(offset)
+      .take(limit)
+      .getManyAndCount();
 
-    res.send(departments);
+    res.send({
+      data: results,
+      page: page,
+      total: total
+    });
   }
 
   /**
@@ -45,6 +61,8 @@ export default class DepartmentController {
     }
 
     department.name = name;
+    department.deputyVolunteer = req.body.deputyVolunteerId;
+    department.headVolunteer = req.body.headVolunteerId;
 
     await deptRepo.save(department);
 
@@ -68,7 +86,7 @@ export default class DepartmentController {
       where: { name: Like(newName) }
     });
 
-    if (existingDept) {
+    if (existingDept && existingDept.id !== id) {
       res
         .status(HttpStatusCodes.Conflict)
         .json(`A Department with the name '${newName}' already exists.`);
@@ -77,9 +95,11 @@ export default class DepartmentController {
 
     let departmentToUpdate = await deptRepo.findOne(id);
 
-    departmentToUpdate = req.body;
+    departmentToUpdate.name = req.body.name;
+    departmentToUpdate.deputyVolunteer = req.body.deputyVolunteerId;
+    departmentToUpdate.headVolunteer = req.body.headVolunteerId;
 
-    await deptRepo.save(departmentToUpdate);
+    await deptRepo.update(id, departmentToUpdate);
 
     res.sendStatus(HttpStatusCodes.Ok);
   }

@@ -30,7 +30,7 @@ const Layout: React.FC = props => {
       <main>{props.children}</main>
       <Snackbar
         open={ctx.snackbar.isSnackbarOpen}
-        autoHideDuration={2500}
+        autoHideDuration={5000}
         onClose={toggleSnackbarHandler}
         anchorOrigin={{ horizontal: 'center', vertical: 'top' }}
       >
