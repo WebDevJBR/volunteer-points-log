@@ -3,6 +3,7 @@ import VolunteerController from './controller/VolunteerController';
 import KingdomController from './controller/KingdomController';
 import DepartmentController from './controller/DepartmentController';
 import LocalGroupController from './controller/LocalGroupController';
+import DateRangeController from './controller/DateRangeController';
 
 /**
  * All application routes
@@ -107,5 +108,25 @@ export const AppRoutes = [
     path: '/local-groups/:id',
     method: 'delete',
     action: LocalGroupController.deleteLocalGroup
+  },
+  {
+    path: '/date-range',
+    method: 'get',
+    action: DateRangeController.getDateRanges
+  },
+  {
+    path: '/date-range',
+    method: 'post',
+    action: DateRangeController.addDateRange
+  },
+  {
+    path: '/date-range',
+    method: 'put',
+    action: DateRangeController.updateDateRange
+  },
+  {
+    path: '/date-range/:id',
+    method: 'delete',
+    action: DateRangeController.deleteDateRange
   }
 ];
