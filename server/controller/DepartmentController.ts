@@ -79,7 +79,7 @@ export default class DepartmentController {
 
     departmentToUpdate = req.body;
 
-    await deptRepo.save(departmentToUpdate);
+    await deptRepo.update(id, departmentToUpdate);
 
     res.sendStatus(HttpStatusCodes.Ok);
   }

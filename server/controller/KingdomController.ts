@@ -79,7 +79,7 @@ export default class KingdomController {
 
     kingdomToUpdate = req.body;
 
-    await kingdomRepo.save(kingdomToUpdate);
+    await kingdomRepo.update(id, kingdomToUpdate);
 
     res.sendStatus(HttpStatusCodes.Ok);
   }

@@ -85,7 +85,7 @@ export default class LocalGroupController {
 
     localGroupToUpdate = req.body;
 
-    await lgRepo.save(localGroupToUpdate);
+    await lgRepo.update(id, localGroupToUpdate);
 
     res.sendStatus(HttpStatusCodes.Ok);
   }
