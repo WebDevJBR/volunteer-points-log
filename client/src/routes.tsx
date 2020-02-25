@@ -5,6 +5,7 @@ import AddUser from './components/Register/AddUser/AddUser';
 import Volunteer from './components/Edit/Volunteer/Volunteer';
 import AdminLanding from './components/Landing/AdminLanding/AdminLanding';
 import UserLanding from './components/Landing/UserLanding/UserLanding';
+import VolunteerHours from './components/Edit/VolunteerHours/VolunteerHours';
 
 const routes = [
   {
@@ -32,7 +33,11 @@ const routes = [
     component: AdminLanding
   },
   {
-    path: ['/edit/volunteer/:id', '/edit/volunteer'],
+    path: '/volunteer/:id/hours',
+    component: VolunteerHours
+  },
+  {
+    path: ['/volunteer/:id', '/volunteer'],
     component: Volunteer
   }
 ];
