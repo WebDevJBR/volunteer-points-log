@@ -114,7 +114,7 @@ export default class VolunteerController {
 
     volunteerToUpdate = req.body;
 
-    await volunteerRepo.save(volunteerToUpdate);
+    await volunteerRepo.update(id, volunteerToUpdate);
 
     res.sendStatus(HttpStatusCodes.Ok);
   }
