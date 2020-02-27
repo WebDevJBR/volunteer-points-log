@@ -23,6 +23,7 @@ import {
 
 import { Select } from '../../../../../shared/Input';
 import { ApiService } from '../../../../../shared/Services';
+import {ApiEndpoints} from '../../../../../shared/Constants/Api/ApiEndpoints';
 import { useStore } from '../../../../../store';
 import { SnackbarActions } from '../../../../../store/Actions';
 import classes from './LocalGroups.module.scss';
@@ -70,7 +71,7 @@ const LocalGroups: React.FC = props => {
   useEffect(() => {
     const fetchKingdoms = async () => {
       const response: any = await ApiService.get(
-        'http://localhost:5000/kingdoms'
+        ApiEndpoints.Kingdoms
       );
 
       setState((prevState: TableState) => {
@@ -131,9 +132,8 @@ const LocalGroups: React.FC = props => {
       ? query.orderDirection.toUpperCase()
       : 'ASC';
     const search = query?.search ? query.search : '';
-    const url = 'http://localhost:5000/local-groups';
 
-    return await ApiService.get(url, {
+    return await ApiService.get(ApiEndpoints.LocalGroups, {
       per_page: query.pageSize,
       page: query.page + 1,
       orderBy: orderBy,
@@ -158,7 +158,7 @@ const LocalGroups: React.FC = props => {
     } else if (!(state.selectedKingdom as Row).id) {
       alertMessage = 'Please select a Kingdom before continuing.';
     } else {
-      return await ApiService.post('http://localhost:5000/local-groups', {
+      return await ApiService.post(ApiEndpoints.LocalGroups, {
         name: newData.name,
         kingdomId: (state.selectedKingdom as Row).id
       })
@@ -184,7 +184,7 @@ const LocalGroups: React.FC = props => {
 
     let success: boolean;
 
-    return await ApiService.put(`http://localhost:5000/local-groups`, {
+    return await ApiService.put(ApiEndpoints.LocalGroups, {
       id: oldData?.id,
       name: newData.name
     })
@@ -202,7 +202,7 @@ const LocalGroups: React.FC = props => {
   const deleteRecord = async (oldData: Row) => {
     let success: boolean;
 
-    return await ApiService.delete(`http://localhost:5000/local-groups`, {
+    return await ApiService.delete(ApiEndpoints.LocalGroups, {
       id: oldData?.id
     })
       .then(() => (success = true))

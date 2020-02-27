@@ -35,7 +35,7 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch server/client with nodemon",
+      "name": "Launch server/client with debug",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "build", "&&", "node", "--inspect-brk", "./build/server.js"],
       "outFiles": ["${workspaceFolder}/build/**/*.js", "${workspaceFolder}/build/client/**/*.js"],
@@ -43,7 +43,39 @@
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "port": 9229,
-      "timeout": 120000,
+      "timeout": 999999,
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch server with debug",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "build:server", "&&", "node", "--inspect-brk", "./build/server.js"],
+      "outFiles": ["${workspaceFolder}/build/**/*.js", "${workspaceFolder}/build/client/**/*.js"],
+      "restart": true,
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "port": 9229,
+      "timeout": 60000,
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch server/client with nodemon",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "start:dev"],
+      "outFiles": ["${workspaceFolder}/build/**/*.js", "${workspaceFolder}/build/client/**/*.js"],
+      "restart": true,
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "port": 9229,
+      "timeout": 999999,
       "skipFiles": [
         "<node_internals>/**"
       ]
@@ -53,7 +85,7 @@
       "request": "launch",
       "name": "Launch server with nodemon",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "build:server", "&&", "node", "--inspect-brk", "./build/server.js"],
+      "runtimeArgs": ["run", "start:dev-server"],
       "outFiles": ["${workspaceFolder}/build/**/*.js", "${workspaceFolder}/build/client/**/*.js"],
       "restart": true,
       "console": "integratedTerminal",

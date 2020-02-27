@@ -20,6 +20,7 @@ import {
 } from '@material-ui/icons';
 
 import { ApiService } from '../../../../../shared/Services';
+import {ApiEndpoints} from '../../../../../shared/Constants/Api/ApiEndpoints';
 import { useStore } from '../../../../../store';
 import { SnackbarActions } from '../../../../../store/Actions';
 
@@ -56,9 +57,8 @@ const Kingdoms: React.FC = props => {
       ? query.orderDirection.toUpperCase()
       : 'ASC';
     const search = query?.search ? query.search : '';
-    const url = 'http://localhost:5000/kingdoms';
 
-    return await ApiService.get(url, {
+    return await ApiService.get(ApiEndpoints.Kingdoms, {
       per_page: query.pageSize,
       page: query.page + 1,
       orderBy: orderBy,
@@ -80,7 +80,7 @@ const Kingdoms: React.FC = props => {
 
     let success: boolean;
 
-    return await ApiService.post('http://localhost:5000/kingdoms', {
+    return await ApiService.post(ApiEndpoints.Kingdoms, {
       name: newData.name
     })
       .then(() => (success = true))
@@ -102,7 +102,7 @@ const Kingdoms: React.FC = props => {
 
     let success: boolean;
 
-    return await ApiService.put(`http://localhost:5000/kingdoms`, {
+    return await ApiService.put(ApiEndpoints.Kingdoms, {
       id: oldData?.id,
       name: newData.name
     })
@@ -120,7 +120,7 @@ const Kingdoms: React.FC = props => {
   const deleteRecord = async (oldData: Row) => {
     let success: boolean;
 
-    return await ApiService.delete(`http://localhost:5000/kingdoms`, {
+    return await ApiService.delete(ApiEndpoints.Kingdoms, {
       id: oldData?.id
     })
       .then(() => (success = true))

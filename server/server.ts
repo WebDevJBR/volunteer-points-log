@@ -24,6 +24,7 @@ createConnection()
     const port = process.env.PORT || 5000;
     const LocalStrategy = passportLocal.Strategy;
     const userRepo: Repository<User> = getManager().getRepository(User);
+    const apiBase = '/api';
 
     /**
      * Serializes the user's id to be stored in the browser as a cookie.
@@ -53,17 +54,17 @@ createConnection()
         });
 
         if (!user) {
-          return done(undefined, false, {
+          return done(null, false, {
             message: `User ${username} was not found.`
           });
         }
 
         hash = CryptoHelper.hashPassword(password, user.salt);
         if (user.password === hash) {
-          return done(undefined, user);
+          return done(null, user);
         }
 
-        return done(undefined, false, {
+        return done(null, false, {
           message: 'Invalid username or password.'
         });
       })
@@ -115,10 +116,10 @@ createConnection()
      * the users is redirected back to /login.
      */
     app.post(
-      '/login',
+      '/api/login',
       passport.authenticate('local', { failureRedirect: '/login' }),
       (request: Request, response: Response) => {
-        response.redirect(`/}`);
+        response.redirect(`/`);
       }
     );
 
@@ -127,7 +128,7 @@ createConnection()
      */
     AppRoutes.forEach(route => {
       app[route.method](
-        route.path,
+        `${apiBase}${route.path}`,
         (request: Request, response: Response, next: Function) => {
           // TODO: The OR should NOT be considered good-practice. The requirements is such that
           // we present a list of users in a dropdown list. This contradicts the idea of

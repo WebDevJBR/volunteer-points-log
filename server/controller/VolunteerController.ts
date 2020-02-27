@@ -46,7 +46,11 @@ export default class VolunteerController {
     const volunteerRepo: Repository<Volunteer> = getManager().getRepository(
       Volunteer
     );
-    const volunteer: Volunteer = await volunteerRepo.findOne(id);
+    const volunteer: Volunteer = await volunteerRepo
+      .createQueryBuilder('volunteer')
+      .loadAllRelationIds()
+      .where(`volunteer.id = ${id}`)
+      .getOne();
 
     response.send(volunteer);
   }
@@ -78,7 +82,13 @@ export default class VolunteerController {
     }
 
     volunteer.name = request.body.name;
-    volunteer.mka = mka;
+    volunteer.mka = request.body.mka;
+    volunteer.membershipNumber = request.body.membershipNumber;
+    volunteer.kingdom = request.body.kingdom;
+    volunteer.localGroup = request.body.localGroup;
+    volunteer.toReceiveFundsType = request.body.toReceiveFundsType;
+    volunteer.other = request.body.other;
+
     volunteer.infoMissing = request.body.infoMissing;
 
     await volunteerRepo.save(volunteer);

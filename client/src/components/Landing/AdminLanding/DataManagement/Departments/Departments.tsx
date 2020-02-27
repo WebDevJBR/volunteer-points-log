@@ -27,6 +27,7 @@ import {
 import { Select, FormControl, makeStyles } from '@material-ui/core';
 
 import { ApiService } from '../../../../../shared/Services';
+import {ApiEndpoints} from '../../../../../shared/Constants/Api/ApiEndpoints';
 import { useStore } from '../../../../../store';
 import { SnackbarActions } from '../../../../../store/Actions';
 
@@ -112,7 +113,7 @@ const Departments: React.FC = props => {
   useEffect(() => {
     const fetchVolunteers = async () => {
       const response: any = await ApiService.get(
-        'http://localhost:5000/volunteers'
+        ApiEndpoints.Volunteers
       );
 
       setState((prevState: TableState) => {
@@ -132,9 +133,8 @@ const Departments: React.FC = props => {
       ? query.orderDirection.toUpperCase()
       : 'ASC';
     const search = query?.search ? query.search : '';
-    const url = 'http://localhost:5000/departments';
 
-    return await ApiService.get(url, {
+    return await ApiService.get(ApiEndpoints.Departments, {
       per_page: query.pageSize,
       page: query.page + 1,
       orderBy: orderBy,
@@ -156,7 +156,7 @@ const Departments: React.FC = props => {
 
     let success: boolean;
 
-    return await ApiService.post('http://localhost:5000/departments', {
+    return await ApiService.post(ApiEndpoints.Departments, {
       name: newData.name,
       headVolunteerId: newData.headVolunteer,
       deputyVolunteerId: newData.deputyVolunteer
@@ -176,7 +176,7 @@ const Departments: React.FC = props => {
   const updateRecord = async (newData: Row, oldData: Row | undefined) => {
     let success: boolean;
 
-    return await ApiService.put(`http://localhost:5000/departments`, {
+    return await ApiService.put(ApiEndpoints.Departments, {
       id: oldData?.id,
       name: newData.name,
       headVolunteerId: newData.headVolunteer,
@@ -196,7 +196,7 @@ const Departments: React.FC = props => {
   const deleteRecord = async (oldData: Row) => {
     let success: boolean;
 
-    return await ApiService.delete(`http://localhost:5000/departments`, {
+    return await ApiService.delete(ApiEndpoints.Departments, {
       id: oldData?.id
     })
       .then(() => (success = true))

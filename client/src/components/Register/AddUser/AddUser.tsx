@@ -55,7 +55,7 @@ const AddUser: React.FC = props => {
 
       let success: boolean;
 
-      await ApiService.post(ApiEndpoints.AddUser, { username, password })
+      await ApiService.post(ApiEndpoints.Users, { username, password })
         .then(value => (success = true))
         .catch(err => (success = false))
         .finally(() => {

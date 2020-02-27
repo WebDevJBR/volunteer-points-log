@@ -65,7 +65,7 @@ const UserLogin: React.FC = props => {
    */
   useEffect(() => {
     const getUserList = async () => {
-      const users = await ApiService.get<Array<IUser>>(ApiEndpoints.GetUsers);
+      const users = await ApiService.get<Array<IUser>>(ApiEndpoints.Users);
 
       setState(previousState => ({ ...previousState, userList: users }));
     };
