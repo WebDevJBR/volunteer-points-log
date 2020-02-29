@@ -137,7 +137,7 @@ const AdminLogin: React.FC = props => {
         );
       })
       .then(() => {
-        history.push('/userlanding');
+        history.push('/user/landing);
       });
   };
 
