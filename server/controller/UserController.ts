@@ -92,4 +92,60 @@ export default class UserController {
       .status(HttpStatusCodes.NotFound)
       .json(`User with ID: ${id} not found.`);
   }
+
+/**
+   * Updates a single existing user
+   * using the ID and properties in the request body.
+   * 
+   * TODO: Update this method in the future for fully updating a user. 
+   * It was implemented in the first iteration for only updating the Admin User's password
+   * 
+   * @param req The HTTP Request Object
+   * @param res The HTTP Response Object
+   */
+  static async updateUser(req: Request, res: Response): Promise<void> {
+    const updateUser: User = new User();
+    const userRepo: Repository<User> = getManager().getRepository(User);
+    const username: string = req.body.username as string;
+    const newPassword: string = req.body.password;
+
+    let existingUser: User;
+    let salt: string;
+
+    if (req.body.admin !== "true"){
+      res
+        .status(HttpStatusCodes.BadRequest)
+        .json('Only admin passwords can be reset.');
+      return;
+    }
+
+    if (!username || !newPassword) {
+      res
+        .status(HttpStatusCodes.BadRequest)
+        .json('You must provide a username and new password to update.');
+      return;
+    }
+
+    existingUser = await userRepo.findOne({
+      where: { name: Like(username) }
+    });
+    if (existingUser) {
+      let id = existingUser.id;
+      salt = CryptoHelper.generateSalt();
+
+      updateUser.name = username;
+      updateUser.password = CryptoHelper.hashPassword(newPassword, salt);
+      updateUser.salt = salt;
+      updateUser.admin = true;
+
+      await userRepo.update(id, updateUser);
+
+      res.sendStatus(HttpStatusCodes.Ok);
+    }
+    else {
+      res
+      .status(HttpStatusCodes.NotFound)
+      .json(`User with username: ${username} not found.`);
+    }
+  }
 }
