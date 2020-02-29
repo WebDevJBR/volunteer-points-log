@@ -58,8 +58,8 @@ const TextField: React.FC<IProps> = props => {
     <>
       {props.title ? (
         <div className={titleClass}>
-          {props.title}:{' '}
-          {props.required ? <span className={classes.required}>*</span> : null}
+          {props.title}
+          {props.required ? <span className={classes.required}>{' *'}</span> : null}
         </div>
       ) : null}
       <MuiTextField

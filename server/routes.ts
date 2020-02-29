@@ -3,6 +3,7 @@ import VolunteerController from './controller/VolunteerController';
 import KingdomController from './controller/KingdomController';
 import DepartmentController from './controller/DepartmentController';
 import LocalGroupController from './controller/LocalGroupController';
+import DateRangeController from './controller/DateRangeController';
 
 /**
  * All application routes
@@ -19,7 +20,7 @@ export const AppRoutes = [
     action: UserController.addUser
   },
   {
-    path: '/users',
+    path: '/users/:id',
     method: 'delete',
     action: UserController.deleteUser
   },
@@ -29,7 +30,7 @@ export const AppRoutes = [
     action: VolunteerController.getVolunteers
   },
   {
-    path: '/volunteers',
+    path: '/volunteers/:id',
     method: 'get',
     action: VolunteerController.getVolunteer
   },
@@ -44,7 +45,7 @@ export const AppRoutes = [
     action: VolunteerController.updateVolunteer
   },
   {
-    path: '/volunteers',
+    path: '/volunteers/:id',
     method: 'delete',
     action: VolunteerController.deleteVolunteer
   },
@@ -64,7 +65,7 @@ export const AppRoutes = [
     action: KingdomController.updateKingdom
   },
   {
-    path: '/kingdoms',
+    path: '/kingdoms/:id',
     method: 'delete',
     action: KingdomController.deleteKingdom
   },
@@ -84,7 +85,7 @@ export const AppRoutes = [
     action: DepartmentController.updateDepartment
   },
   {
-    path: '/departments',
+    path: '/departments/:id',
     method: 'delete',
     action: DepartmentController.deleteDepartment
   },
@@ -104,8 +105,28 @@ export const AppRoutes = [
     action: LocalGroupController.updateLocalGroup
   },
   {
-    path: '/local-groups',
+    path: '/local-groups/:id',
     method: 'delete',
     action: LocalGroupController.deleteLocalGroup
+  },
+  {
+    path: '/date-range',
+    method: 'get',
+    action: DateRangeController.getDateRanges
+  },
+  {
+    path: '/date-range',
+    method: 'post',
+    action: DateRangeController.addDateRange
+  },
+  {
+    path: '/date-range',
+    method: 'put',
+    action: DateRangeController.updateDateRange
+  },
+  {
+    path: '/date-range/:id',
+    method: 'delete',
+    action: DateRangeController.deleteDateRange
   }
 ];

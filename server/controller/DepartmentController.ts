@@ -79,7 +79,7 @@ export default class DepartmentController {
 
     departmentToUpdate = req.body;
 
-    await deptRepo.save(departmentToUpdate);
+    await deptRepo.update(id, departmentToUpdate);
 
     res.sendStatus(HttpStatusCodes.Ok);
   }
@@ -95,7 +95,7 @@ export default class DepartmentController {
     const deptRepo: Repository<Department> = getManager().getRepository(
       Department
     );
-    const id = req.query.id;
+    const id = req.params.id;
     const department = await deptRepo.findOne(id);
 
     if (department) {

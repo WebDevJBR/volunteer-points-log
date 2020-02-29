@@ -40,8 +40,8 @@ const Select: React.FC<ISelectProps> = props => {
     <>
       {props.title ? (
         <div className={titleClass}>
-          {props.title}:{' '}
-          {props.required ? <span className={classes.required}>*</span> : null}
+          {props.title}
+          {props.required ? <span className={classes.required}>{' *'}</span> : null}
         </div>
       ) : null}
       <MuiSelect

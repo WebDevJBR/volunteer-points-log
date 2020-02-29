@@ -77,7 +77,7 @@ export default class UserController {
    */
   static async deleteUser(request: Request, response: Response): Promise<void> {
     const userRepo: Repository<User> = getManager().getRepository(User);
-    const id = request.query.id;
+    const id = request.params.id;
     const user = await userRepo.findOne(id);
 
     if (user) {

@@ -79,7 +79,7 @@ export default class KingdomController {
 
     kingdomToUpdate = req.body;
 
-    await kingdomRepo.save(kingdomToUpdate);
+    await kingdomRepo.update(id, kingdomToUpdate);
 
     res.sendStatus(HttpStatusCodes.Ok);
   }
@@ -95,7 +95,7 @@ export default class KingdomController {
     const kingdomRepo: Repository<Kingdom> = getManager().getRepository(
       Kingdom
     );
-    const id = req.query.id;
+    const id = req.params.id;
     const kingdom = await kingdomRepo.findOne(id);
 
     if (kingdom) {
