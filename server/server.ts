@@ -9,7 +9,7 @@ import { createConnection, Repository, getManager, Like } from 'typeorm';
 import { Request, Response } from 'express';
 import { AppRoutes } from './routes';
 import { User } from './entity/User';
-import CryptoHelper from './utils/cryptoHelper';
+import CryptoHelper from './utils/CryptoHelper';
 import { STATUS_CODES } from 'http';
 import { HttpStatusCodes } from './constants/HttpStatusCodes';
 
