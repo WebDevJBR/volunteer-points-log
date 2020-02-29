@@ -21,7 +21,7 @@ export const AppRoutes = [
     action: UserController.addUser
   },
   {
-    path: '/users/:id',
+    path: '/users',
     method: 'delete',
     action: UserController.deleteUser
   },
@@ -46,7 +46,7 @@ export const AppRoutes = [
     action: VolunteerController.updateVolunteer
   },
   {
-    path: '/volunteers/:id',
+    path: '/volunteers',
     method: 'delete',
     action: VolunteerController.deleteVolunteer
   },
@@ -66,7 +66,7 @@ export const AppRoutes = [
     action: KingdomController.updateKingdom
   },
   {
-    path: '/kingdoms/:id',
+    path: '/kingdoms',
     method: 'delete',
     action: KingdomController.deleteKingdom
   },
@@ -86,7 +86,7 @@ export const AppRoutes = [
     action: DepartmentController.updateDepartment
   },
   {
-    path: '/departments/:id',
+    path: '/departments',
     method: 'delete',
     action: DepartmentController.deleteDepartment
   },
@@ -106,7 +106,7 @@ export const AppRoutes = [
     action: LocalGroupController.updateLocalGroup
   },
   {
-    path: '/local-groups/:id',
+    path: '/local-groups',
     method: 'delete',
     action: LocalGroupController.deleteLocalGroup
   },

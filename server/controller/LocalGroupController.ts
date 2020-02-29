@@ -14,16 +14,31 @@ export default class LocalGroupController {
    * @param res The HTTP Response Object
    */
   static async getLocalGroups(req: Request, res: Response): Promise<void> {
-    const kingdom = req.query.kingdom || '';
+    const orderBy = req.query['orderBy'] || 'id';
+    const orderDirection = req.query['orderDirection'] || 'ASC';
+    const search = req.query['search'] || '';
+    const limit = parseInt(req.query['per_page']) || 0;
+    const page = parseInt(req.query['page']) || 0;
+    const offset = (page - 1) * limit;
+    const kingdomId = req.query.kingdomId || null;
     const localGroupRepo: Repository<LocalGroup> = getManager().getRepository(
       LocalGroup
     );
 
-    const localGroups = await localGroupRepo.find({
-      where: {kingdom: Like(`%${kingdom}%`)}
-    });
+    const [results, total] = await localGroupRepo
+      .createQueryBuilder('local_group')
+      .where(`local_group.kingdomId = ${kingdomId}`)
+      .andWhere('local_group.name LIKE :name', { name: '%' + search + '%' })
+      .orderBy(`local_group.${orderBy}`, orderDirection)
+      .skip(offset)
+      .take(limit)
+      .getManyAndCount();
 
-    res.send(localGroups);
+    res.send({
+      data: results,
+      page: page,
+      total: total
+    });
   }
 
   /**
@@ -50,7 +65,7 @@ export default class LocalGroupController {
     }
 
     localgroup.name = req.body.name;
-    localgroup.kingdom = req.body.kingdom;
+    localgroup.kingdom = req.body.kingdomId;
 
     await lgRepo.save(localgroup);
 
@@ -101,7 +116,7 @@ export default class LocalGroupController {
     const lgRepo: Repository<LocalGroup> = getManager().getRepository(
       LocalGroup
     );
-    const id = req.params.id;
+    const id = req.query.id;
     const localgroup = await lgRepo.findOne(id);
 
     if (localgroup) {
