@@ -103,7 +103,7 @@ const UserLogin: React.FC = props => {
       })
       .then(() => {
 
-        history.push('/user/landing');
+        history.push('/landing/user');
       });
   };
 

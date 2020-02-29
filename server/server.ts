@@ -72,10 +72,16 @@ createConnection()
     // For dev purposes only...
     app.use((req, res, next) => {
       res.header('Access-Control-Allow-Origin', '*');
-      res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,HEAD,DELETE,OPTIONS');
-      res.header('Access-Control-Allow-Headers', 'content-Type,x-requested-with');
+      res.header(
+        'Access-Control-Allow-Methods',
+        'GET,POST,PUT,HEAD,DELETE,OPTIONS'
+      );
+      res.header(
+        'Access-Control-Allow-Headers',
+        'content-Type,x-requested-with'
+      );
       next();
-    })
+    });
 
     /**
      * Parses incoming requests bodies as JSON.
@@ -104,7 +110,7 @@ createConnection()
 
     /**
      * Handles authentication requests.
-     * 
+     *
      * Note: When a login attempt is met with failure,
      * the users is redirected back to /login.
      */
@@ -123,20 +129,20 @@ createConnection()
       app[route.method](
         route.path,
         (request: Request, response: Response, next: Function) => {
-
           // TODO: The OR should NOT be considered good-practice. The requirements is such that
-          // we present a list of users in a dropdown list. This contradicts the idea of 
+          // we present a list of users in a dropdown list. This contradicts the idea of
           // securing all API calls, as it requires that getUsers is available without auth.
-
-          if (request.isAuthenticated() || ((route.method === 'get' || route.method === 'post') && route.path === '/users')) {
+          if (
+            request.isAuthenticated() ||
+            ((route.method === 'get' || route.method === 'post') &&
+              route.path === '/users')
+          ) {
             route
               .action(request, response)
               .then(() => next)
               .catch(err => next(err));
           } else {
-            response
-              .status(HttpStatusCodes.Unauthorized)
-              .end();
+            response.status(HttpStatusCodes.Unauthorized).end();
           }
         }
       );
@@ -145,8 +151,23 @@ createConnection()
     /**
      * Any unregistered routes should be directed to the React app.
      */
-    app.get('*', (req, res) => {
-      res.sendFile(path.join(`${__dirname}/client/index.html`));
+    app.get('*', (request: Request, response: Response) => {
+      const loginScreens: Array<string> = [
+        '/login',
+        '/login/user',
+        '/login/admin'
+      ];
+      const isLoginPath = loginScreens.includes(request.path);
+
+      // TODO: Currently, this does not discern between admin and non-admin pages,
+      // therefore, non-admins can access admin pages if they manually type a
+      // route in the address bar.
+
+      if (!isLoginPath && !request.isAuthenticated()) {
+        response.redirect('/login');
+      } else {
+        response.sendFile(path.join(`${__dirname}/client/index.html`));
+      }
     });
 
     /**
