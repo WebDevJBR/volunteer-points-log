@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { getManager, Like, Repository } from 'typeorm';
 import { User } from '../entity/User';
 import { HttpStatusCodes } from '../constants/HttpStatusCodes';
-import CryptoHelper from '../utils/cryptoHelper';
+import CryptoHelper from '../utils/CryptoHelper';
 import passport = require('passport');
 
 /**
