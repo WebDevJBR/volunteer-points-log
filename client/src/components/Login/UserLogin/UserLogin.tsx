@@ -67,8 +67,6 @@ const UserLogin: React.FC = props => {
     const getUserList = async () => {
       const users = await ApiService.get<Array<IUser>>(ApiEndpoints.GetUsers);
 
-      console.log(users);
-
       setState(previousState => ({ ...previousState, userList: users }));
     };
 
@@ -87,7 +85,6 @@ const UserLogin: React.FC = props => {
 
   const handleLogin = async () => {
     let user: IUser = state.selectedUser as IUser;
-    console.log('Logging in selected user', user.name);
 
     await ApiService.post(ApiEndpoints.Login, {
       username: user.name,
@@ -105,7 +102,7 @@ const UserLogin: React.FC = props => {
         );
       })
       .then(() => {
-        console.log('Login success!');
+
         history.push('/userlanding');
       });
   };
