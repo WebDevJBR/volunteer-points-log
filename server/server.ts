@@ -10,6 +10,8 @@ import { Request, Response } from 'express';
 import { AppRoutes } from './routes';
 import { User } from './entity/User';
 import CryptoHelper from './utils/cryptoHelper';
+import { STATUS_CODES } from 'http';
+import { HttpStatusCodes } from './constants/HttpStatusCodes';
 
 createConnection()
   .then(async connection => {
@@ -94,6 +96,9 @@ createConnection()
 
     /**
      * Handles authentication requests.
+     * 
+     * Note: When a login attempt is met with failure,
+     * the users is redirected back to /login.
      */
     app.post(
       '/login',
@@ -110,14 +115,21 @@ createConnection()
       app[route.method](
         route.path,
         (request: Request, response: Response, next: Function) => {
-          // if (request.isAuthenticated()) {
+
+          // TODO: The OR should NOT be considered good-practice. The requirements is such that
+          // we present a list of users in a dropdown list. This contradicts the idea of 
+          // securing all API calls, as it requires that getUsers is available without auth.
+
+          if (request.isAuthenticated() || (route.method === 'get' && route.path === '/users')) {
             route
               .action(request, response)
               .then(() => next)
               .catch(err => next(err));
-          // } else {
-          //   response.redirect('/login');
-          // }
+          } else {
+            response
+              .status(HttpStatusCodes.Unauthorized)
+              .end();
+          }
         }
       );
     });
