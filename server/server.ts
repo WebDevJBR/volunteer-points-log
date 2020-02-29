@@ -132,9 +132,12 @@ createConnection()
           // TODO: The OR should NOT be considered good-practice. The requirements is such that
           // we present a list of users in a dropdown list. This contradicts the idea of
           // securing all API calls, as it requires that getUsers is available without auth.
+
           if (
             request.isAuthenticated() ||
-            ((route.method === 'get' || route.method === 'post') &&
+            ((route.method === 'get' ||
+              route.method === 'post' ||
+              route.method === 'put') &&
               route.path === '/users')
           ) {
             route

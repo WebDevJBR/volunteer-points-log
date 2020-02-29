@@ -26,6 +26,11 @@ export const AppRoutes = [
     action: UserController.deleteUser
   },
   {
+    path: '/users',
+    method: 'put',
+    action: UserController.updateUser
+  },
+  {
     path: '/volunteers',
     method: 'get',
     action: VolunteerController.getVolunteers
