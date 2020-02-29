@@ -4,7 +4,8 @@ import KingdomController from './controller/KingdomController';
 import DepartmentController from './controller/DepartmentController';
 import LocalGroupController from './controller/LocalGroupController';
 import DateRangeController from './controller/DateRangeController';
-
+import toReceiveFundsTypeController from './controller/toReceiveFundsTypeController';
+import VolunteerTimeEntryController from './controller/VolunteerTimeEntryController';
 /**
  * All application routes
  */
@@ -20,7 +21,7 @@ export const AppRoutes = [
     action: UserController.addUser
   },
   {
-    path: '/users/:id',
+    path: '/users',
     method: 'delete',
     action: UserController.deleteUser
   },
@@ -45,7 +46,7 @@ export const AppRoutes = [
     action: VolunteerController.updateVolunteer
   },
   {
-    path: '/volunteers/:id',
+    path: '/volunteers',
     method: 'delete',
     action: VolunteerController.deleteVolunteer
   },
@@ -65,7 +66,7 @@ export const AppRoutes = [
     action: KingdomController.updateKingdom
   },
   {
-    path: '/kingdoms/:id',
+    path: '/kingdoms',
     method: 'delete',
     action: KingdomController.deleteKingdom
   },
@@ -85,7 +86,7 @@ export const AppRoutes = [
     action: DepartmentController.updateDepartment
   },
   {
-    path: '/departments/:id',
+    path: '/departments',
     method: 'delete',
     action: DepartmentController.deleteDepartment
   },
@@ -105,7 +106,7 @@ export const AppRoutes = [
     action: LocalGroupController.updateLocalGroup
   },
   {
-    path: '/local-groups/:id',
+    path: '/local-groups',
     method: 'delete',
     action: LocalGroupController.deleteLocalGroup
   },
@@ -128,5 +129,45 @@ export const AppRoutes = [
     path: '/date-range/:id',
     method: 'delete',
     action: DateRangeController.deleteDateRange
+  },
+  {
+    path: '/funds-type',
+    method: 'get',
+    action: toReceiveFundsTypeController.getFundsTypes
+  },
+  {
+    path: '/funds-type',
+    method: 'post',
+    action: toReceiveFundsTypeController.addFundsType
+  },
+  {
+    path: '/funds-type',
+    method: 'put',
+    action: toReceiveFundsTypeController.updateFundsType
+  },
+  {
+    path: '/funds-type',
+    method: 'delete',
+    action: toReceiveFundsTypeController.deleteFundsType
+  },
+  {
+    path: '/volunteers/time-entry',
+    method: 'post',
+    action: VolunteerTimeEntryController.addTimeEntry
+  },
+  {
+    path: '/volunteers/time-entry',
+    method: 'get',
+    action: VolunteerTimeEntryController.getTimeEntries
+  },
+  {
+    path: '/volunteers/time-entry',
+    method: 'put',
+    action: VolunteerTimeEntryController.updateTimeEntry
+  },
+  {
+    path: '/volunteers/time-entry',
+    method: 'delete',
+    action: VolunteerTimeEntryController.deleteTimeEntry
   }
 ];

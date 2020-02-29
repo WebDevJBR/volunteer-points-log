@@ -14,11 +14,27 @@ export default class KingdomController {
    * @param res The HTTP Response Object
    */
   static async getKingdoms(req: Request, res: Response): Promise<void> {
-    const kingdoms = await getManager()
-      .getRepository(Kingdom)
-      .find();
+    const orderBy = req.query['orderBy'] || 'id';
+    const orderDirection = req.query['orderDirection'] || 'ASC';
+    const search = req.query['search'] || ''
+    const limit = parseInt(req.query['per_page']) || 0;
+    const page = parseInt(req.query['page']) || 0;
+    const offset = (page - 1) * limit;
 
-    res.send(kingdoms);
+    const [results, total] = await getManager()
+      .getRepository(Kingdom)
+      .createQueryBuilder('kingdom')
+      .where('kingdom.name LIKE :name', {name: '%' + search + '%' })
+      .orderBy(`kingdom.${orderBy}`, orderDirection)
+      .skip(offset)
+      .take(limit)
+      .getManyAndCount();
+
+    res.send({
+      data: results,
+      page: page,
+      total: total
+    });
   }
 
   /**
@@ -95,7 +111,7 @@ export default class KingdomController {
     const kingdomRepo: Repository<Kingdom> = getManager().getRepository(
       Kingdom
     );
-    const id = req.params.id;
+    const id = req.query.id;
     const kingdom = await kingdomRepo.findOne(id);
 
     if (kingdom) {
