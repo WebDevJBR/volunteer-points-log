@@ -8,6 +8,7 @@ import { useStore } from '../../../store';
 import { SnackbarActions } from '../../../store/Actions';
 import LoginBase from '../../../hoc/LoginBase/LoginBase';
 import classes from './AddUser.module.scss';
+import { LoginConstants } from '../../../shared/Constants/Misc/LoginConstants';
 
 interface IState {
   username: string;
@@ -47,9 +48,14 @@ const AddUser: React.FC = props => {
 
     if (isFormValid) {
       const username = state.username;
+
+      // Note: Version one of the application doesn't use a password
+      // for non-admin users.
+      const password = LoginConstants.NonAdminUserPassword;
+
       let success: boolean;
 
-      await ApiService.post(ApiEndpoints.AddUser, { username })
+      await ApiService.post(ApiEndpoints.AddUser, { username, password })
         .then(value => (success = true))
         .catch(err => (success = false))
         .finally(() => {
