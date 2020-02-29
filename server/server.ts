@@ -128,7 +128,7 @@ createConnection()
           // we present a list of users in a dropdown list. This contradicts the idea of 
           // securing all API calls, as it requires that getUsers is available without auth.
 
-          if (request.isAuthenticated() || (route.method === 'get' && route.path === '/users')) {
+          if (request.isAuthenticated() || ((route.method === 'get' || route.method === 'post') && route.path === '/users')) {
             route
               .action(request, response)
               .then(() => next)
