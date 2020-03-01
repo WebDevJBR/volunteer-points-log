@@ -1,6 +1,6 @@
 import React from 'react';
 import { TextField, InputAdornment } from '@material-ui/core';
-import { Autocomplete } from '@material-ui/lab';
+import { Autocomplete, AutocompleteProps } from '@material-ui/lab';
 import SearchIcon from '@material-ui/icons/Search';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -26,7 +26,7 @@ const useInputAdornmentStyles = makeStyles({
   }
 });
 
-const SearchBox: React.FC = props => {
+const SearchBox: React.FC<AutocompleteProps<any>> = props => {
   const searchStyles = useSearchStyles();
   const textFieldStyles = useTextFieldStyles();
   const inputAdornmentStyles = useInputAdornmentStyles();

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Grid } from '@material-ui/core';
 
-import { Button, Select } from '../../../../shared/Input';
+import { Button } from '../../../../shared/Input';
 import classes from './VolunteerCard.module.scss';
 
 import crownImage from '../../../../assets/yellow-crown.png';
