@@ -102,11 +102,11 @@ const UserLogin: React.FC = props => {
         );
       })
       .then(() => {
-
         history.push('/landing/user');
       });
   };
 
+  const handleCancel = () => handleNavigate('/login');
   const handleAddUser = () => handleNavigate('/register/user');
 
   const handleChange = (name: keyof typeof state) => (
@@ -172,6 +172,11 @@ const UserLogin: React.FC = props => {
             onClick={handleLogin}
           >
             LOGIN
+          </Button>
+        </div>
+        <div className={classes.item}>
+          <Button color="secondary" onClick={handleCancel}>
+            CANCEL
           </Button>
         </div>
         <div className={classes.item}>

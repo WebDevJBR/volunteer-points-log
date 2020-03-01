@@ -100,6 +100,12 @@ const AdminLogin: React.FC = props => {
     return isValid;
   };
 
+  const handleNavigate = (path: string) => {
+    if (history) {
+      history.push(path);
+    }
+  };
+
   const inputChangedHandler = (event: any, controlName: string) => {
     const updatedControls: any = updateObject(state.controls, {
       [controlName]: updateObject(state.controls[controlName], {
@@ -141,6 +147,8 @@ const AdminLogin: React.FC = props => {
       });
   };
 
+  const handleCancel = () => handleNavigate('/login');
+
   return (
     <LoginBase title={'ADMIN LOGIN'}>
       <div className={classes.item}>
@@ -162,6 +170,9 @@ const AdminLogin: React.FC = props => {
       </div>
       <div className={classes.submit}>
         <Button color={'primary'} onClick={handleLogin}>LOGIN</Button>
+      </div>
+      <div className={classes.submit}>
+        <Button color={'secondary'} onClick={handleCancel}>CANCEL</Button>
       </div>
     </LoginBase>
   );

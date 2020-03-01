@@ -30,6 +30,14 @@ const AddUser: React.FC = props => {
 
   const history = useHistory();
 
+  const handleNavigate = (path: string) => {
+    if (history) {
+      history.push(path);
+    }
+  };
+
+  const handleCancel = () => handleNavigate('/login/user');
+
   const handleNameChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ): void => {
@@ -85,23 +93,30 @@ const AddUser: React.FC = props => {
   };
 
   return (
-    <LoginBase title='ADD USER'>
-      <div className={classes.item}>
-        <div className={classes.title}>USER NAME</div>
-        <TextField
-          className={classes.textField}
-          onChange={handleNameChange}
-          value={state.username}
-        ></TextField>
-      </div>
-      <div className={classes.submit}>
-        <Button
-          onClick={handleSubmit}
-          disabled={state.username.length === 0 ? true : false}
-          color='primary'
-        >
-          SAVE
-        </Button>
+    <LoginBase title="ADD USER">
+      <div className={classes.container}>
+        <div className={classes.item}>
+          <div className={classes.title}>USER NAME</div>
+          <TextField
+            className={classes.textField}
+            onChange={handleNameChange}
+            value={state.username}
+          ></TextField>
+        </div>
+        <div className={classes.item}>
+          <Button
+            onClick={handleSubmit}
+            disabled={state.username.length === 0 ? true : false}
+            color="primary"
+          >
+            SAVE
+          </Button>
+        </div>
+        <div className={classes.item}>
+          <Button onClick={handleCancel} color="secondary">
+            CANCEL
+          </Button>
+        </div>
       </div>
     </LoginBase>
   );
