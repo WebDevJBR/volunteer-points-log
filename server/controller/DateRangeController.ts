@@ -12,13 +12,14 @@ export default class DateRangeController {
    * @param request The HTTP Request Object
    * @param response The HTTP Response Object
    */
-  static async getDateRanges(
+  static async getDateRange(
     request: Request,
     response: Response
   ): Promise<void> {
+    const id = request.query.id;
     const dateRange = await getManager()
       .getRepository(DateRange)
-      .find();
+      .findOne(id);
 
     response.send(dateRange);
   }
@@ -37,19 +38,7 @@ export default class DateRangeController {
     const DateRangeRepo: Repository<DateRange> = getManager().getRepository(
       DateRange
     );
-    const activeYearToAdd: string = request.body.activeYear;
-    const existingDateRange: DateRange = await DateRangeRepo.findOne({
-      where: { activeYear: Like(activeYearToAdd) }
-    });
 
-    if (existingDateRange) {
-      response
-        .status(HttpStatusCodes.Conflict)
-        .json(`A date range for year '${activeYearToAdd}' already exists.`);
-      return;
-    }
-
-    dateRange.activeYear = activeYearToAdd;
     dateRange.endDate = new Date(request.body.endDate);
     dateRange.startDate = new Date(request.body.startDate);
 
@@ -70,25 +59,20 @@ export default class DateRangeController {
         DateRange
     );
     const id = req.body.id;
-    const dateRangeToFind = req.body.activeYear;
-    const existingDateRange: DateRange = await DateRangeRepo.findOne({
-      where: { activeYear: Like(dateRangeToFind) }
-    });
+    const existingDateRange: DateRange = await DateRangeRepo.findOne(id);
 
-    if (existingDateRange && existingDateRange.id !== id) {
+    if (existingDateRange) {
+      let DateRangeToUpdate: DateRange = new DateRange();
+      DateRangeToUpdate = req.body;
+      await DateRangeRepo.update(id, DateRangeToUpdate);
+      res.sendStatus(HttpStatusCodes.Ok);
+    }
+    else{
       res
-        .status(HttpStatusCodes.Conflict)
-        .json(`A date range for year '${dateRangeToFind}' already exists.`);
+        .status(HttpStatusCodes.NotFound)
+        .json(`Could not find date range with id '${id}'.`);
       return;
     }
-
-    let DateRangeToUpdate: DateRange = await DateRangeRepo.findOne(id);
-
-    DateRangeToUpdate = req.body;
-
-    await DateRangeRepo.update(id, DateRangeToUpdate);
-
-    res.sendStatus(HttpStatusCodes.Ok);
   }
 
   /**
@@ -105,7 +89,7 @@ export default class DateRangeController {
     const DateRangeRepo: Repository<DateRange> = getManager().getRepository(
         DateRange
     );
-    const id = request.params.id;
+    const id = request.query.id;
     const dateRange = await DateRangeRepo.findOne(id);
 
     if (dateRange) {
