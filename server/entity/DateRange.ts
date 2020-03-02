@@ -5,9 +5,6 @@ export class DateRange {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({unique: true})
-  activeYear: string;
-
   @Column()
   startDate: Date;
 

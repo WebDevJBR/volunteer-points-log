@@ -118,7 +118,7 @@ export const AppRoutes = [
   {
     path: '/date-range',
     method: 'get',
-    action: DateRangeController.getDateRanges
+    action: DateRangeController.getDateRange
   },
   {
     path: '/date-range',
@@ -131,7 +131,7 @@ export const AppRoutes = [
     action: DateRangeController.updateDateRange
   },
   {
-    path: '/date-range/:id',
+    path: '/date-range',
     method: 'delete',
     action: DateRangeController.deleteDateRange
   },
