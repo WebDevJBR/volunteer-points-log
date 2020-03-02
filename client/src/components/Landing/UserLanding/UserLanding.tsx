@@ -5,7 +5,7 @@ import { ApiEndpoints } from '../../../shared/Constants';
 import { IVolunteer } from '../../../shared/Interfaces';
 
 import PageBase from '../../../hoc/PageBase/PageBase';
-import { SearchBox, Button } from '../../../shared/Input';
+import { Button } from '../../../shared/Input';
 import VolunteerCard from '../UserLanding/VolunteerCard/VolunteerCard';
 // import classes from './UserLanding.module.scss';
 

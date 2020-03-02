@@ -26,7 +26,7 @@ const VolunteerCard: React.FC<IVolunteerCard> = props => {
           alignItems='center'
         >
           <Grid item xs={6} sm={2}>
-            <img src={crownImage}/>
+            <img src={crownImage} alt='Volunteer Image'/>
           </Grid>
           <Grid item xs={6} sm={5}>
             <div>
