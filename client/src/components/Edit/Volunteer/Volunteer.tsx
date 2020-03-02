@@ -73,12 +73,13 @@ const AddVolunteer: React.FC = () => {
       const mockVolunteer: IVolunteer = {
         name: 'Willow',
         mka: 'Warwick Davis',
-        membershipNumber: 12345,
+        membershipNumber: '12345',
         kingdom: {
           id: 0,
           name: 'Some Kingdom'
         },
-        toReceiveFunds: 'Everyone'
+        toReceiveFunds: 'Everyone',
+        infoMissing: false
       };
 
       setState((prevState: IState) => {

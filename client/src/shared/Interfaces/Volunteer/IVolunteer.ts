@@ -11,8 +11,9 @@ export interface ILocalGroup {
 export interface IVolunteer {
   name: string;
   mka: string;
-  membershipNumber?: number;
+  membershipNumber?: string;
   kingdom: IKingdom;
   localGroup?: ILocalGroup;
   toReceiveFunds: string;
+  infoMissing: boolean;
 }

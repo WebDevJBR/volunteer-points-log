@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Grid } from '@material-ui/core';
 
-import { Button, Select } from '../../../../shared/Input';
+import { Button } from '../../../../shared/Input';
 import classes from './VolunteerCard.module.scss';
 
 import crownImage from '../../../../assets/yellow-crown.png';
@@ -26,7 +26,7 @@ const VolunteerCard: React.FC<IVolunteerCard> = props => {
           alignItems='center'
         >
           <Grid item xs={6} sm={2}>
-            <img src={crownImage}/>
+            <img src={crownImage} alt=''/>
           </Grid>
           <Grid item xs={6} sm={5}>
             <div>
