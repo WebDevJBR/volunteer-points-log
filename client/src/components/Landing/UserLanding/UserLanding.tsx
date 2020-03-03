@@ -3,7 +3,6 @@ import { Grid, Checkbox, FormControlLabel, TextField } from '@material-ui/core';
 import { ApiService } from '../../../shared/Services';
 import { ApiEndpoints } from '../../../shared/Constants';
 import { IVolunteer } from '../../../shared/Interfaces';
-import { useHistory } from 'react-router-dom';
 import PageBase from '../../../hoc/PageBase/PageBase';
 import { Button } from '../../../shared/Input';
 import VolunteerCard from '../UserLanding/VolunteerCard/VolunteerCard';
@@ -16,20 +15,7 @@ interface IState {
 }
 
 const UserLanding: React.FC = props => {
-  const history = useHistory();
-  const handleNavigate = (path: string) => {
-    if (history) {
-      history.push(path);
-    }
-  };
-  const LogoutUser = async () => {
-    try {
-      await ApiService.get('http://localhost:5000/logout');
-      handleNavigate('/login');
-    } catch {
-      console.log("Error logging out");
-    }
-  }
+
   const [state, setState] = useState<IState>({
     volunteerList: [],
     missingInfo: false,
@@ -84,13 +70,7 @@ const UserLanding: React.FC = props => {
         <Grid item xs={4}>
           <Button color="primary">Register Volunteer</Button>
         </Grid>
-      </Grid>
-      <Grid container alignItems="flex-start" justify="flex-end" direction="row">
-        <Grid item xs={4}>
-          <Button color="primary" onClick={LogoutUser}
-          >Logout</Button>
-        </Grid>
-      </Grid>      
+      </Grid>     
       <div>
         {
           (state.volunteerList as IVolunteer[])
