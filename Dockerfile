@@ -6,5 +6,4 @@ WORKDIR client
 RUN npm install
 WORKDIR ..
 RUN npm run build
-WORKDIR build
-CMD ["node", "server.js"]
+CMD ["node", "build/server.js"]
