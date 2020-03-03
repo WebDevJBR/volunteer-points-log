@@ -9,11 +9,19 @@ export interface ILocalGroup {
 }
 
 export interface IVolunteer {
+  id: number;
   name: string;
   mka: string;
   membershipNumber?: string;
-  kingdom: IKingdom;
-  localGroup?: ILocalGroup;
-  toReceiveFunds: string;
+  kingdom: number;
+  localGroup?: number;
+  toReceiveFundsType: number;
+  other: string;
   infoMissing: boolean;
+  feathersTaken: number;
+  ticketsTaken: number;
+  aboveAndBeyondTaken: number;
+  twentyHours: boolean;
+  fiftyHours: boolean;
+  oneHundredHours: boolean;
 }

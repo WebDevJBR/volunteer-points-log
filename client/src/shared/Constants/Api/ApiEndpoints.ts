@@ -1,3 +1,5 @@
+const serverHost = 'http://localhost:5000'
+
 /**
  * API Endpoints through which HTTP requests are routed.
  */
@@ -6,13 +8,20 @@ export const ApiEndpoints = {
    * Users
    */
   UserLogin: '/login/user',
-  AdminLogin: 'login/admin',
-  GetUsers: '/users',
-  AddUser: '/users',
-  Login: '/login',
+  AdminLogin: '/login/admin',
+
+  /**
+   * API Endpoints
+   */
+  Users: `${serverHost}/api/users`,
+  Login: `${serverHost}/api/login`,
+  Kingdoms: `${serverHost}/api/kingdoms`,
+  LocalGroups: `${serverHost}/api/local-groups`,
+  Departments: `${serverHost}/api/departments`,
+  Volunteers: `${serverHost}/api/volunteers`,
 
   /**
    * Volunteers
    */
-  GetVolunteers: '/volunteers'
+  GetVolunteers: `${serverHost}/api/volunteers`
 };
