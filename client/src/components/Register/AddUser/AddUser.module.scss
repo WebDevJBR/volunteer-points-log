@@ -1,10 +1,14 @@
+.container {
+  display: inline-block;
+  margin-top: 10px;
+}
+
 .item {
-  margin: 0 auto;
-  margin-bottom: 20px;
-  width: 50%;
+  display: inherit;
+  margin: 0px 5px;
   .title {
     text-align: left;
-    color: #E0E0E0;
+    color: #e0e0e0;
     font-size: medium;
     margin-bottom: 5px;
   }
