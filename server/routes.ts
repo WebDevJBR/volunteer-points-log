@@ -6,6 +6,7 @@ import LocalGroupController from './controller/LocalGroupController';
 import DateRangeController from './controller/DateRangeController';
 import toReceiveFundsTypeController from './controller/toReceiveFundsTypeController';
 import VolunteerTimeEntryController from './controller/VolunteerTimeEntryController';
+import LogoutController from './controller/LogoutController';
 /**
  * All application routes
  */
@@ -174,5 +175,10 @@ export const AppRoutes = [
     path: '/volunteers/time-entry',
     method: 'delete',
     action: VolunteerTimeEntryController.deleteTimeEntry
+  },
+  {
+    path: '/logout',
+    method: 'get',
+    action: LogoutController.logout
   }
 ];
