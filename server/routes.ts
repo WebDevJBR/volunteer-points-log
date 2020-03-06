@@ -7,7 +7,6 @@ import { DepartmentController } from './controller/DepartmentController';
 import { LocalGroupController } from './controller/LocalGroupController';
 import { DateRangeController } from './controller/DateRangeController';
 import { VolunteerTimeEntryController } from './controller/VolunteerTimeEntryController';
-import { LogoutController } from './controller/LogoutController';
 import { ToReceiveFundsTypeController } from './controller/toReceiveFundsTypeController';
 
 
@@ -179,11 +178,6 @@ export const AppRoutes = [
     path: '/funds-type',
     method: 'delete',
     action: ToReceiveFundsTypeController.deleteFundsType
-  },
-  {
-    path: '/logout',
-    method: 'get',
-    action: LogoutController.logout
   },
   {
     path: '/import/kingdomsAndGroups',
