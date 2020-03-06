@@ -5,7 +5,7 @@ import { getManager, Like } from 'typeorm';
 /**
  * Handles calls from the 'volunteers' route.
  */
-export default class VolunteerController {
+export class VolunteerController {
   /**
    * Gets a list of volunteers given the filter information
    * found in the query string.
