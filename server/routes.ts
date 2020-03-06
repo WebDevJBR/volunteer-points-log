@@ -1,5 +1,4 @@
-import UserController from './controller/UserController';
-import VolunteerController from './controller/VolunteerController';
+import { UserController, VolunteerController, ImportController } from './controller';
 
 /**
  * All application routes
@@ -19,5 +18,20 @@ export const AppRoutes = [
     path: '/volunteers',
     method: 'get',
     action: VolunteerController.getVolunteers
+  },
+  {
+    path: '/import/kingdomsAndGroups',
+    method: 'post',
+    action: ImportController.importKingdomsAndGroups
+  },
+  {
+    path: '/import/volunteers',
+    method: 'post',
+    action: ImportController.importVolunteers
+  },
+  {
+    path: '/import/departments',
+    method: 'post',
+    action: ImportController.importDepartments
   }
 ];

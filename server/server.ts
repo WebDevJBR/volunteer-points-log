@@ -3,18 +3,25 @@ import { createConnection } from 'typeorm';
 import { Request, Response } from 'express';
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
-import { AppRoutes } from './routes';
 import * as path from 'path';
+import * as multer from 'multer';
+import { AppRoutes } from './routes';
+
 
 createConnection()
   .then(async connection => {
     /**
      * Synchronize database schema with models.
      */
-    await connection.synchronize();
+    await connection.synchronize(false);
 
     const app = express();
     const port = process.env.PORT || 5000;
+    
+    /**
+     * File handling properties.
+     */
+    const upload = multer({dest: path.join(__dirname, 'tmp')});
 
     /**
      * Parses incoming requests bodies as JSON.
@@ -32,6 +39,7 @@ createConnection()
     AppRoutes.forEach(route => {
       app[route.method](
         route.path,
+        upload.single('import-file'),
         (request: Request, response: Response, next: Function) => {
           route
             .action(request, response)
