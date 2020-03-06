@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany } from "typeorm";
 import { LocalGroup } from "./LocalGroup";
-import { ToReceivedFundsType_REF } from "./toReceivedFundsType_REF";
+import { ToReceivedFundsType_REF } from "./ToReceivedFundsType_REF";
 import { VolunteerTimeEntry } from "./VolunteerTimeEntry";
 import { Kingdom } from "./Kingdom";
 
@@ -42,15 +42,15 @@ export class Volunteer {
   @Column()
   infoMissing: boolean;
 
-  @ManyToOne(type => Kingdom, kingdom => kingdom.volunteers)
+  @ManyToOne(type => Kingdom, kingdom => kingdom.volunteers, {nullable: true})
   kingdom: number;
 
   @ManyToOne(type => LocalGroup, group => group.volunteers, {nullable: true})
   localGroup: number;
 
-  @ManyToOne(type => ToReceivedFundsType_REF, toRec => toRec.volunteers)
+  @ManyToOne(type => ToReceivedFundsType_REF, toRec => toRec.volunteers, {nullable: true})
   toReceiveFundsType: number;
 
-  @OneToMany(type => VolunteerTimeEntry, timeEntry => timeEntry.volunteer)
+  @OneToMany(type => VolunteerTimeEntry, timeEntry => timeEntry.volunteer, {nullable: true})
   timeEntries: VolunteerTimeEntry[];
 }
