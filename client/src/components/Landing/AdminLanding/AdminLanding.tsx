@@ -5,6 +5,7 @@ import PageBase from '../../../hoc/PageBase/PageBase';
 import ImportExport from './ImportExport/ImportExport';
 import DataManagement from './DataManagement/DataManagement';
 
+
 interface TabPanelProps {
   children?: React.ReactNode;
   index: any;
@@ -42,7 +43,7 @@ const AdminLanding: React.FC = props => {
   };
 
   return (
-    <PageBase>
+    <PageBase>      
       <Tabs value={state.tab} onChange={handleChange}>
         <Tab label='Import / Export' />
         <Tab label='Data Management' />
