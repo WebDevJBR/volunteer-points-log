@@ -6,15 +6,30 @@ import { Button } from '../../../../shared/Input';
 import classes from './VolunteerCard.module.scss';
 
 import crownImage from '../../../../assets/yellow-crown.png';
+import { useHistory } from 'react-router-dom';
 
 interface IVolunteerCard {
   name: string;
   mka: string;
   membershipNumber?: string;
   missingInfo?: boolean;
+  id: number
 }
 
 const VolunteerCard: React.FC<IVolunteerCard> = props => {
+  const history = useHistory();
+  const handleNavigate = (path: string) => {
+    if (history) {
+      history.push(path);
+    }
+  };
+  const handleEdit = () => {
+    handleNavigate('/edit/volunteer/' + props.id)
+  }
+  const handleRegister = () => {
+    handleNavigate('/volunteer/' + props.id + '/hours')
+  }
+
   return (
     <div className={classes.card}>
       <div className={classes.volunteerInfo}>
@@ -54,10 +69,10 @@ const VolunteerCard: React.FC<IVolunteerCard> = props => {
         alignItems='flex-end'
       >
         <Grid item xs={6} sm={1}>
-          <Button color='secondary'>Edit</Button>
+          <Button color='secondary' onClick={handleEdit}>Edit</Button>
         </Grid>
         <Grid item xs={6} sm={1}>
-          <Button color='primary'>Hours</Button>
+          <Button color='primary' onClick={handleRegister}>Hours</Button>
         </Grid>
       </Grid>
     </div>

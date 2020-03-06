@@ -1,5 +1,5 @@
 import React, { useState, useEffect }  from 'react';
-import { Grid, Checkbox, FormControlLabel, TextField } from '@material-ui/core';
+import { Grid, Checkbox, FormControlLabel, TextField, makeStyles, InputAdornment } from '@material-ui/core';
 import { ApiService } from '../../../shared/Services';
 import { ApiEndpoints } from '../../../shared/Constants';
 import { IVolunteer } from '../../../shared/Interfaces';
@@ -7,7 +7,25 @@ import { useHistory } from 'react-router-dom';
 import PageBase from '../../../hoc/PageBase/PageBase';
 import { Button } from '../../../shared/Input';
 import VolunteerCard from '../UserLanding/VolunteerCard/VolunteerCard';
+import SearchIcon from '@material-ui/icons/Search';
 // import classes from './UserLanding.module.scss';
+
+const useTextFieldStyles = makeStyles({
+  root: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: '20px',
+    border: '1px solid #9A9A9A',
+    width: '100%',
+    marginRight: '30px',
+  }
+});
+
+const useInputAdornmentStyles = makeStyles({
+  root: {
+    paddingLeft: '5px',
+    paddingRight: '10%'
+  }
+});
 
 interface IState {
   volunteerList: IVolunteer[] | [];
@@ -58,6 +76,9 @@ const UserLanding: React.FC = props => {
     setState(previousState => ({ ...previousState, searchText: event.target.value}))
   }
 
+  const textFieldStyles = useTextFieldStyles();
+  const inputAdornmentStyles = useInputAdornmentStyles();
+
   return (
     <PageBase>
       <Grid container>
@@ -65,6 +86,18 @@ const UserLanding: React.FC = props => {
           <TextField
             value={state.searchText}
             onChange={searchChange}
+            classes={{ root: textFieldStyles.root }}
+            InputProps={{disableUnderline: true,
+              startAdornment: (
+                <InputAdornment
+                  position="start"
+                  classes={{ root: inputAdornmentStyles.root }}
+                >
+                  <SearchIcon />
+                </InputAdornment>
+              )
+            }}
+            
           />
         </Grid>
         <Grid item xs={2}>
@@ -94,12 +127,12 @@ const UserLanding: React.FC = props => {
       <div>
         {
           (state.volunteerList as IVolunteer[])
-            .filter((el: IVolunteer) => el.infoMissing === state.missingInfo)
+            .filter((el: IVolunteer) => el.infoMissing === state.missingInfo || el.infoMissing)
             .filter((el: IVolunteer) => el.mka.trim().toLowerCase().substring(0, state.searchText.trim().length) === state.searchText.trim().toLowerCase()
               || el.name.trim().toLowerCase().substring(0, state.searchText.trim().length) === state.searchText.trim().toLowerCase()
               || (el.membershipNumber && el.membershipNumber.trim().toLowerCase().substring(0, state.searchText.trim().length) === state.searchText.trim().toLowerCase()))
             .map((el: IVolunteer) => 
-              <VolunteerCard name={el.name} mka={el.mka} membershipNumber={el.membershipNumber} missingInfo={el.infoMissing} />
+              <VolunteerCard name={el.name} mka={el.mka} membershipNumber={el.membershipNumber} missingInfo={el.infoMissing} id={el.id}/>
           )
         }
       </div>
