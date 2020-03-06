@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 import { DateRange } from '../entity/DateRange';
-import { getManager, Like, Repository } from 'typeorm';
+import { getManager, Repository } from 'typeorm';
 import { HttpStatusCodes } from '../constants/HttpStatusCodes';
 
 /**
  * Handles calls from the 'time-entry' route.
  */
-export default class DateRangeController {
+export class DateRangeController {
   /**
    * Gets the date range from the DateRange table
    * @param request The HTTP Request Object

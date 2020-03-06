@@ -5,7 +5,7 @@
 
 import { Request, Response } from 'express';
 
-export default class LogoutController {
+export class LogoutController {
     /**
    * @param req The HTTP Request Object
    * @param res The HTTP Response Object

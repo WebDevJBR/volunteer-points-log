@@ -6,7 +6,7 @@ import { HttpStatusCodes } from '../constants/HttpStatusCodes';
 /**
  * Handles calls from the 'kingdoms' route.
  */
-export default class KingdomController {
+export class KingdomController {
   /**
    * Retrieves list of all kingdoms.
    *

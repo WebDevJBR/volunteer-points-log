@@ -10,7 +10,7 @@ export class Department {
   @Column()
   name: string;
 
-  @OneToOne(type => Volunteer)
+  @OneToOne(type => Volunteer, {nullable: true})
   @JoinColumn()
   deputyVolunteer: number;
 

@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 import { Department } from '../entity/Department';
-import { getManager, Like, Repository, SelectQueryBuilder } from 'typeorm';
+import { getManager, Like, Repository } from 'typeorm';
 import { HttpStatusCodes } from '../constants/HttpStatusCodes';
 
 /**
  * Handles calls from the 'departments' route.
  */
-export default class DepartmentController {
+export class DepartmentController {
   /**
    * Retrieves list of all departments.
    *
