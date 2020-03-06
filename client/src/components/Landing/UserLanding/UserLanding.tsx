@@ -7,6 +7,7 @@ import PageBase from '../../../hoc/PageBase/PageBase';
 import { Button } from '../../../shared/Input';
 import VolunteerCard from '../UserLanding/VolunteerCard/VolunteerCard';
 import SearchIcon from '@material-ui/icons/Search';
+import { useHistory } from 'react-router-dom';
 // import classes from './UserLanding.module.scss';
 
 const useTextFieldStyles = makeStyles({
@@ -16,6 +17,7 @@ const useTextFieldStyles = makeStyles({
     border: '1px solid #9A9A9A',
     width: '100%',
     marginRight: '30px',
+    align: 'left'
   }
 });
 
@@ -23,6 +25,12 @@ const useInputAdornmentStyles = makeStyles({
   root: {
     paddingLeft: '5px',
     paddingRight: '10%'
+  }
+});
+
+const useFormControlStyles = makeStyles({
+  root: {
+    marginLeft: '5%'
   }
 });
 
@@ -64,10 +72,25 @@ const UserLanding: React.FC = props => {
 
   const textFieldStyles = useTextFieldStyles();
   const inputAdornmentStyles = useInputAdornmentStyles();
+  const FormControlStyles = useFormControlStyles();
+  
+  const history = useHistory();
+  const handleNavigate = (path: string) => {
+    if (history) {
+      history.push(path);
+    }
+  };
+  const handleRegister = () => {
+    handleNavigate('/register/volunteer');
+  }
 
   return (
     <PageBase>
-      <Grid container>
+      <Grid 
+      container
+      justify='space-between'
+      alignItems='center'
+      direction='row'>
         <Grid item xs={6}>
           <TextField
             value={state.searchText}
@@ -86,7 +109,7 @@ const UserLanding: React.FC = props => {
             
           />
         </Grid>
-        <Grid item xs={2}>
+        <Grid item xs={3}>
           <FormControlLabel
             control={
               <Checkbox
@@ -98,10 +121,11 @@ const UserLanding: React.FC = props => {
               />
             }
             label="Missing Info"
+            classes={{root: FormControlStyles.root}}
           />
         </Grid>
-        <Grid item xs={4}>
-          <Button color="primary">Register Volunteer</Button>
+        <Grid item xs={3}>
+          <Button color="primary" onClick={handleRegister}>Register Volunteer</Button>
         </Grid>
       </Grid>     
       <div>

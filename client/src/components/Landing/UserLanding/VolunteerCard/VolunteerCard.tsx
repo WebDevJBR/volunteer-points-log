@@ -24,10 +24,10 @@ const VolunteerCard: React.FC<IVolunteerCard> = props => {
     }
   };
   const handleEdit = () => {
-    handleNavigate('/edit/volunteer/' + props.id)
+    handleNavigate('/edit/volunteer/' + props.id);
   }
-  const handleRegister = () => {
-    handleNavigate('/volunteer/' + props.id + '/hours')
+  const handleHours = () => {
+    handleNavigate('/volunteer/' + props.id + '/hours');
   }
 
   return (
@@ -72,7 +72,7 @@ const VolunteerCard: React.FC<IVolunteerCard> = props => {
           <Button color='secondary' onClick={handleEdit}>Edit</Button>
         </Grid>
         <Grid item xs={6} sm={1}>
-          <Button color='primary' onClick={handleRegister}>Hours</Button>
+          <Button color='primary' onClick={handleHours}>Hours</Button>
         </Grid>
       </Grid>
     </div>
