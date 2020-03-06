@@ -102,7 +102,7 @@ export class ImportController {
           let existingVolunteer: Volunteer = await volunteerRepo.findOne({ mka: vol.mundane });
           let existingKingdom: Kingdom = await kingdomRepo.findOne({name: vol.kingdom});
           let existingGroup: LocalGroup = await localGroupRepo.findOne({ name: vol.localGroup});
-          let fundsType: ToReceivedFundsType_REF = await receieveFundsTypeRepo.findOne({where:{name:Like('Local')}});
+          let fundsType: ToReceivedFundsType_REF = await receieveFundsTypeRepo.findOne({where:{name:Like('Local Group')}});
 
           
           let newVolunteer = new Volunteer();

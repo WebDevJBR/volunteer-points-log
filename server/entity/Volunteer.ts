@@ -48,9 +48,9 @@ export class Volunteer {
   @ManyToOne(type => LocalGroup, group => group.volunteers, {nullable: true})
   localGroup: number;
 
-  @ManyToOne(type => ToReceivedFundsType_REF, toRec => toRec.volunteers, {nullable: true})
+  @ManyToOne(type => ToReceivedFundsType_REF, toRec => toRec.volunteers)
   toReceiveFundsType: number;
 
-  @OneToMany(type => VolunteerTimeEntry, timeEntry => timeEntry.volunteer, {nullable: true})
+  @OneToMany(type => VolunteerTimeEntry, timeEntry => timeEntry.volunteer)
   timeEntries: VolunteerTimeEntry[];
 }
