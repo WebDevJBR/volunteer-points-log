@@ -3,6 +3,7 @@ export enum HttpStatusCodes {
      * 2xx Statuses
      */
     Ok = 200,
+    Created = 201,
 
     /**
      * 4xx Statuses
