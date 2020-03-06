@@ -1,4 +1,4 @@
-import { UserController, VolunteerController, ImportController } from './controller';
+import { UserController, VolunteerController, ImportController, ExportController } from './controller';
 
 /**
  * All application routes
@@ -33,5 +33,15 @@ export const AppRoutes = [
     path: '/import/departments',
     method: 'post',
     action: ImportController.importDepartments
+  },
+  {
+    path: '/export/kingdoms',
+    method: 'get',
+    action: ExportController.exportKingdomHours
+  },
+  {
+    path: '/export/breakdown',
+    method: 'get',
+    action: ExportController.exportKingdomBreakdown
   }
 ];
