@@ -45,7 +45,7 @@ const UserLanding: React.FC = props => {
    */
   useEffect(() => {
     const getUserList = async () => {
-      const volunteers = await ApiService.get<Array<IVolunteer>>(ApiEndpoints.GetVolunteers);
+      const volunteers = await ApiService.get<Array<IVolunteer>>(ApiEndpoints.Volunteers);
 
       setState(previousState => ({ ...previousState, volunteerList: volunteers }));
     };

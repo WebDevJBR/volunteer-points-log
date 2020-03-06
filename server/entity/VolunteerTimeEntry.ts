@@ -9,6 +9,9 @@ export class VolunteerTimeEntry {
   id: number;
 
   @Column()
+  date: Date;
+
+  @Column()
   timeIn: Date;
 
   @Column()

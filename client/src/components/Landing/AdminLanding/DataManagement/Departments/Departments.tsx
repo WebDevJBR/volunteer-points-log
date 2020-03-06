@@ -27,13 +27,14 @@ import {
 import { Select, FormControl, makeStyles } from '@material-ui/core';
 
 import { ApiService } from '../../../../../shared/Services';
-import {ApiEndpoints} from '../../../../../shared/Constants/Api/ApiEndpoints';
+import { ApiEndpoints } from '../../../../../shared/Constants/Api/ApiEndpoints';
 import { useStore } from '../../../../../store';
 import { SnackbarActions } from '../../../../../store/Actions';
 
 interface Row {
   id: number;
   name: string;
+  multiplier: number;
   headVolunteer: number;
   deputyVolunteer: number;
 }
@@ -70,6 +71,10 @@ const Departments: React.FC = props => {
 
   const tableColumns = [
     { title: 'Department Name', field: 'name' },
+    {
+      title: 'Multiplier',
+      field: 'multiplier'
+    },
     {
       title: 'Head',
       field: 'headVolunteer',
@@ -112,9 +117,7 @@ const Departments: React.FC = props => {
 
   useEffect(() => {
     const fetchVolunteers = async () => {
-      const response: any = await ApiService.get(
-        ApiEndpoints.Volunteers
-      );
+      const response: any = await ApiService.get(ApiEndpoints.Volunteers);
 
       setState((prevState: TableState) => {
         return {
@@ -158,6 +161,7 @@ const Departments: React.FC = props => {
 
     return await ApiService.post(ApiEndpoints.Departments, {
       name: newData.name,
+      multiplier: newData.multiplier,
       headVolunteerId: newData.headVolunteer,
       deputyVolunteerId: newData.deputyVolunteer
     })
@@ -179,6 +183,7 @@ const Departments: React.FC = props => {
     return await ApiService.put(ApiEndpoints.Departments, {
       id: oldData?.id,
       name: newData.name,
+      multiplier: newData.multiplier,
       headVolunteerId: newData.headVolunteer,
       deputyVolunteerId: newData.deputyVolunteer
     })

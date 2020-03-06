@@ -1,4 +1,4 @@
-const serverHost = 'http://' + window.location.hostname + ':5000'
+const serverHost = `http:// ${window.location.hostname}:5000`;
 
 /**
  * API Endpoints through which HTTP requests are routed.
@@ -13,15 +13,11 @@ export const ApiEndpoints = {
   /**
    * API Endpoints
    */
-  Users: `${serverHost}/api/users`,
-  Login: `${serverHost}/api/login`,
-  Kingdoms: `${serverHost}/api/kingdoms`,
-  LocalGroups: `${serverHost}/api/local-groups`,
-  Departments: `${serverHost}/api/departments`,
-  Volunteers: `${serverHost}/api/volunteers`,
-
-  /**
-   * Volunteers
-   */
-  GetVolunteers: `${serverHost}/api/volunteers`
+  Users: `${serverHost}/users`,
+  Login: `${serverHost}/login`,
+  Kingdoms: `${serverHost}/kingdoms`,
+  LocalGroups: `${serverHost}/local-groups`,
+  Departments: `${serverHost}/departments`,
+  Volunteers: `${serverHost}/volunteers`,
+  TimeEntries: `${serverHost}/volunteers/time-entry`
 };
