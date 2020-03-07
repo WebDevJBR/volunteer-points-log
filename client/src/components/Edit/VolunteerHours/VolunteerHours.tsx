@@ -5,12 +5,12 @@ import {
   Grid,
   Divider,
   FormControl,
-  makeStyles,
   TextField,
   Checkbox,
   FormGroup,
   FormControlLabel
 } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import {
   DatePicker,
   TimePicker,

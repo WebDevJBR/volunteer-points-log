@@ -24,7 +24,8 @@ import {
   ViewColumn,
   Refresh
 } from '@material-ui/icons';
-import { Select, FormControl, makeStyles } from '@material-ui/core';
+import { Select, FormControl } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 
 import { ApiService } from '../../../../../shared/Services';
 import { ApiEndpoints } from '../../../../../shared/Constants/Api/ApiEndpoints';
