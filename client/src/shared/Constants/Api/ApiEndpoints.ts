@@ -19,6 +19,7 @@ export const ApiEndpoints = {
   LocalGroups: `${serverHost}/api/local-groups`,
   Departments: `${serverHost}/api/departments`,
   Volunteers: `${serverHost}/api/volunteers`,
+  Logout: `${serverHost}/logout`,
 
   /**
    * Volunteers
