@@ -19,5 +19,6 @@ export const ApiEndpoints = {
   LocalGroups: `${serverHost}/local-groups`,
   Departments: `${serverHost}/departments`,
   Volunteers: `${serverHost}/volunteers`,
-  TimeEntries: `${serverHost}/volunteers/time-entry`
+  TimeEntries: `${serverHost}/volunteers/time-entry`,
+  DateRange: `${serverHost}/date-range`
 };

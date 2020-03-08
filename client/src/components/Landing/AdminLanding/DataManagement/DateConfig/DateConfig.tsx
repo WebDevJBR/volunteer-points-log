@@ -10,6 +10,7 @@ import { Button } from '../../../../../shared/Input';
 import { ApiService } from '../../../../../shared/Services';
 import { useStore } from '../../../../../store';
 import { SnackbarActions } from '../../../../../store/Actions';
+import { ApiEndpoints } from '../../../../../shared/Constants/Api/ApiEndpoints';
 
 interface IState {
   startDate: Date | {} | null;
@@ -57,7 +58,7 @@ const DateConfig: React.FC = props => {
   const updateDateRange = async() => {
     let success: boolean;
 
-    return await ApiService.put(`http://localhost:5000/date-range`, {
+    return await ApiService.put(ApiEndpoints.DateRange, {
       id: state.id,
       startDate: state.startDate,
       endDate: state.endDate
@@ -76,12 +77,12 @@ const DateConfig: React.FC = props => {
   const saveDateRange = async() => {
     let success: boolean;
 
-    return await ApiService.post(`http://localhost:5000/date-range`, {
+    return await ApiService.post(ApiEndpoints.DateRange, {
       startDate: state.startDate,
       endDate: state.endDate
     })
       .then(() => (success = true))
-      .catch(() => (success = false))
+      .catch((data) => { console.log(data); success = false})
       .finally(() => {
         const alertMessage =
           success === true
@@ -106,14 +107,24 @@ const DateConfig: React.FC = props => {
    */
   useEffect(() => {
     const getDateRange = async () => {
-      const url = 'http://localhost:5000/date-range';
-      const dateRange = await ApiService.get<IState>(url);
-      setState((previousState: any) => ({
-        ...previousState,
-        startDate: dateRange.startDate,
-        endDate: dateRange.endDate,
-        id: dateRange.id
-      }));
+      const dateRange = await ApiService.get<IState>(ApiEndpoints.DateRange);
+      if (dateRange.id){
+        setState((previousState: any) => ({
+          ...previousState,
+          startDate: dateRange.startDate,
+          endDate: dateRange.endDate,
+          id: dateRange.id
+        }));
+      }
+      else{
+        setState((previousState: any) => ({
+          ...previousState,
+          startDate: new Date(),
+          endDate: new Date(),
+          id: null
+        }));
+      }
+      
     };
 
     getDateRange();
