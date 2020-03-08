@@ -3,7 +3,12 @@ import { getManager, Repository, Like } from "typeorm";
 import * as csv from "csv-parser";
 import * as fs from "fs";
 import { HttpStatusCodes } from "../constants/HttpStatusCodes";
-import { Kingdom, LocalGroup, Volunteer, ToReceiveFundsType_REF, Department } from "../entity";
+import { Kingdom } from '../entity/Kingdom';
+import { Volunteer } from '../entity/Volunteer';
+import { ToReceiveFundsType_REF } from '../entity/ToReceiveFundsType_REF';
+import { LocalGroup } from '../entity/LocalGroup';
+import { Department } from "../entity/Department";
+
 
 /**
  * Handles calls from the 'imports' route.
@@ -99,32 +104,61 @@ export class ImportController {
         // Required to include header row in csv file, but skips over it
         if (rows > 0) {
           
-          let existingVolunteer: Volunteer = await volunteerRepo.findOne({ mka: vol.mundane });
+          let existingVolunteer: Volunteer = await volunteerRepo.findOne({ name: vol.sca });
           let existingKingdom: Kingdom = await kingdomRepo.findOne({name: vol.kingdom});
           let existingGroup: LocalGroup = await localGroupRepo.findOne({ name: vol.localGroup});
-          let fundsType: ToReceiveFundsType_REF = await receieveFundsTypeRepo.findOne({where:{name:Like('Local Group')}});
+          let fundsType: ToReceiveFundsType_REF = await receieveFundsTypeRepo.findOne({where: { type: Like('Local Group')}});
 
-          
           let newVolunteer = new Volunteer();
           newVolunteer.mka = vol.mundane ? vol.mundane : '';
           newVolunteer.name = vol.sca ? vol.sca : '';
           newVolunteer.kingdom = existingKingdom?.id;
           newVolunteer.localGroup = existingGroup?.id;
-          newVolunteer.toReceiveFundsType = vol.toReceive ? fundsType?.id :  newVolunteer.toReceiveFundsType;
           newVolunteer.membershipNumber = vol.membershipNum;
           newVolunteer.infoMissing = (!existingKingdom || !existingGroup) ? true: false;
 
-         
+         // Handles to receieve cases
+          if (vol.toReceive) {
+            if ((vol.toReceive == vol.localGroup) && existingGroup) {
+              newVolunteer.toReceiveFundsType = fundsType?.id;
+            }
+            else if ((vol.toReceive == vol.kingdom) && existingKingdom) {
+              fundsType  = await receieveFundsTypeRepo.findOne({where:{type:Like('Kingdom')}});
+              newVolunteer.toReceiveFundsType = fundsType?.id;
+            }
+            else {
+              newVolunteer.other = vol.toReceive;
+              fundsType  = await receieveFundsTypeRepo.findOne({where:{type:Like('Other')}});
+              newVolunteer.toReceiveFundsType = fundsType?.id;
+            }
+          } 
+          
           try {
             if (existingVolunteer) {
-              // If kingdom ids match update the exisiting volunteer
+              // If kingdom ids match update the exisiting volunteer (Same logic as new, but updating existing)
               if (existingVolunteer.kingdom === existingKingdom?.id) {
+               
                 existingVolunteer.mka = vol.mundane ? vol.mundane : '';
                 existingVolunteer.name = vol.sca ? vol.sca : '';
                 existingVolunteer.localGroup = existingGroup?.id;
-                existingVolunteer.toReceiveFundsType = vol.toReceive ? fundsType?.id :  newVolunteer.toReceiveFundsType;
                 existingVolunteer.membershipNumber = vol.membershipNum;
                 existingVolunteer.infoMissing = (!existingGroup) ? true: false;
+
+                // Handles to receieve cases
+                if (vol.toReceive) {
+                  if (vol.toReceive == existingGroup?.name) {
+                    existingVolunteer.toReceiveFundsType = fundsType?.id;
+                  }
+                  else if (vol.toReceive == existingGroup?.name) {
+                    fundsType  = await receieveFundsTypeRepo.findOne({where:{type:Like('Kingdom')}});
+                    existingVolunteer.toReceiveFundsType = fundsType?.id;
+                  }
+                  else {
+                    existingVolunteer.other = vol.toReceive;
+                    fundsType  = await receieveFundsTypeRepo.findOne({where:{type:Like('Other')}});
+                    existingVolunteer.toReceiveFundsType = fundsType?.id;
+                  }
+                } 
   
                 await volunteerRepo.save(existingVolunteer);
               }

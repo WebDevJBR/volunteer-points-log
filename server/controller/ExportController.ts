@@ -2,7 +2,11 @@ import { Response } from "express";
 import { getManager, Repository, Like} from "typeorm";
 import * as json2csv from 'json2csv';
 import { HttpStatusCodes } from "../constants/HttpStatusCodes";
-import { Kingdom, Volunteer, VolunteerTimeEntry, ToReceiveFundsType_REF, LocalGroup } from "../entity"
+import { Kingdom } from '../entity/Kingdom';
+import { Volunteer } from '../entity/Volunteer';
+import { VolunteerTimeEntry } from '../entity/VolunteerTimeEntry';
+import { ToReceiveFundsType_REF } from '../entity/ToReceiveFundsType_REF';
+import { LocalGroup } from '../entity/LocalGroup';
 
 /**
  * Handles calls from the 'Export' route.
@@ -32,26 +36,28 @@ export class ExportController {
 
     
     let csv_data = [];
-    let totalActual, totalEarned: number = 0;
+    let totalActual: number = 0;
+    let totalEarned: number = 0;
     kingdomsWithVolunteerTime.forEach(kingdom => {
 
-        let kingdomActualHours, kingdomEarnedHours: number  = 0;        
+        let kingdomActualHours: number = 0;
+        let kingdomEarnedHours: number  = 0;        
         kingdom.volunteers.forEach(vol => {
             vol.timeEntries.forEach(entry => {
-                let hourDiff = ((Math.abs(entry.timeOut.getTime()- entry.timeIn.getTime())) / 36e5);
+                let hourDiff = ((Math.abs(entry.timeOut.getTime() - entry.timeIn.getTime())) / 36e5);
                 kingdomActualHours +=  hourDiff;
-                kingdomEarnedHours +=  ((hourDiff * entry.multiplier) + hourDiff);
+                kingdomEarnedHours += ( entry.multiplier != 0 ) ? entry.multiplier * hourDiff: hourDiff;
             });
         });
 
         totalActual += kingdomActualHours;
         totalEarned += kingdomEarnedHours;
-    
-        csv_data.push({"Kingdom of Residence": kingdom.name, "Actual Hours": kingdomActualHours.toFixed(2), "Earned Hours": kingdomEarnedHours.toFixed(2)});
+
+        csv_data.push({"Kingdom of Residence": kingdom.name, "Actual Hours": kingdomActualHours?.toFixed(2), "Earned Hours": kingdomEarnedHours?.toFixed(2)});
     });
 
     // Write total row
-    csv_data.push({"Kingdom of Residence": "Total", "Actual Hours": totalActual.toFixed(2), "Earned Hours": totalEarned.toFixed(2)});
+    csv_data.push({"Kingdom of Residence": "Total", "Actual Hours": totalActual?.toFixed(2), "Earned Hours": totalEarned?.toFixed(2)});
     
     let data = await json2csv.parse(csv_data);
 
@@ -76,9 +82,10 @@ export class ExportController {
     const kingdomId = request.query["id"] || null;
     const kingdom = await kingdomRepo.findOne({where: {id: kingdomId}});
 
+    const getHours = async (toRecType: string, kingdom: Kingdom) => {
 
-    const getHours = async (toRecType: string) => {
         let toReceiveFundsTypeRef = await toReceieveRepo.findOne({where: {type: Like(toRecType)}});
+
 
         let volunteers = await volunteerRepo.find({
             where: { toReceiveFundsType: toReceiveFundsTypeRef, kingdom: kingdom },
@@ -108,8 +115,10 @@ export class ExportController {
     
     
     // Breakdown of specific hours for the kingdom 
-    let actual, earned: number = 0;
-    let volSpecificEntries = await getHours('Kingdom');
+    let actual: number = 0;
+    let earned: number = 0;
+    let volSpecificEntries = await getHours('Kingdom', kingdom);
+
     // Loop through each volunteer, adding up hours for this specific kingdom entry
     volSpecificEntries.forEach(vol => { 
         let hours = calculateEntryHours(vol.timeEntries);
@@ -119,12 +128,11 @@ export class ExportController {
 
     // Handle header / entry for specific kingdom
     let csv_data = [];
+   
     csv_data.push({"Kingdom": kingdom.name, "Actual Hours": 0, "Earned Hours": 0});
     csv_data.push({"Kingdom": "To Kingdom of " + kingdom.name, "Actual Hours": actual.toFixed(2), "Earned Hours": earned.toFixed(2)});
 
 
-    
-    
     // Local Groups Break down
     let toReceiveFundsTypeRefLG = await toReceieveRepo.findOne({where: {type: Like('Local Group')}});
     // Second query is get all time entries for volunteers with a local group specified
@@ -153,7 +161,7 @@ export class ExportController {
     
     // Last query to get the data for volunteers who picked other for said kingdom
     // Used to verify we only pull volunteers who are using LG as indicated
-    let otherEntries = await getHours('Other');
+    let otherEntries = await getHours('Other', kingdom);
 
     actual = earned = 0;
     otherEntries.forEach(vol => {
