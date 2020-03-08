@@ -1,4 +1,4 @@
-const serverHost = 'http://localhost:5000'
+const serverHost = 'http://' + window.location.hostname + ':5000'
 
 /**
  * API Endpoints through which HTTP requests are routed.
