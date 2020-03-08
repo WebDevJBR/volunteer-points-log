@@ -23,5 +23,18 @@ export const ApiEndpoints = {
   /**
    * Volunteers
    */
-  GetVolunteers: `${serverHost}/api/volunteers`
+  GetVolunteers: `${serverHost}/api/volunteers`,
+
+  /**
+   * Imports
+   */
+  ImportKingdomsAndGroups: `${serverHost}/api/import/kingdomsAndGroups`,
+  ImportVolunteers: `${serverHost}/api/import/volunteers`,
+  ImportDepartments: `${serverHost}/api/import/departments`,
+
+  /**
+   * Exports
+   */
+  ExportKingdoms: `${serverHost}/api/export/kingdoms`,
+  ExportBreakdown: `${serverHost}/api/export/breakdown`
 };
