@@ -1,4 +1,15 @@
-import { UserController, VolunteerController, ImportController, ExportController, KingdomController, DepartmentController, LocalGroupController, DateRangeController, VolunteerTimeEntryController, LogoutController, ToReceiveFundsTypeController } from './controller';
+import { UserController } from './controller/UserController';
+import { VolunteerController } from './controller/VolunteerController';
+import { ImportController } from './controller/ImportController';
+import { ExportController } from './controller/ExportController';
+import { KingdomController } from './controller/KingdomController';  
+import { DepartmentController } from './controller/DepartmentController';
+import { LocalGroupController } from './controller/LocalGroupController';
+import { DateRangeController } from './controller/DateRangeController';
+import { VolunteerTimeEntryController } from './controller/VolunteerTimeEntryController';
+import { LogoutController } from './controller/LogoutController';
+import { ToReceiveFundsTypeController } from './controller/ToReceiveFundsTypeController';
+
 
 /**
  * All application routes
