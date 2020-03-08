@@ -8,7 +8,7 @@ import { LocalGroupController } from './controller/LocalGroupController';
 import { DateRangeController } from './controller/DateRangeController';
 import { VolunteerTimeEntryController } from './controller/VolunteerTimeEntryController';
 import { LogoutController } from './controller/LogoutController';
-import { ToReceiveFundsTypeController } from './controller/ToReceiveFundsTypeController';
+import { ToReceiveFundsTypeController } from './controller/toReceiveFundsTypeController';
 
 
 /**

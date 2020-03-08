@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany } from "typeorm";
 import { LocalGroup } from "./LocalGroup";
-import { ToReceiveFundsType_REF } from "../entity";
+import { ToReceiveFundsType_REF } from "./toReceiveFundsType_REF";
 import { VolunteerTimeEntry } from "./VolunteerTimeEntry";
 import { Kingdom } from "./Kingdom";
 
