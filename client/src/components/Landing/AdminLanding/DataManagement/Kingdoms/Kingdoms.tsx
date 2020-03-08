@@ -31,13 +31,11 @@ interface Row {
 
 interface TableState {
   columns: Array<Column<Row>>;
-  data: Row[];
 }
 
 const Kingdoms: React.FC = props => {
   const state = React.useState<TableState>({
-    columns: [{ title: 'Kingdom Name', field: 'name' }],
-    data: []
+    columns: [{ title: 'Kingdom Name', field: 'name' }]
   })[0];
 
   const globalState = useStore();
@@ -151,6 +149,7 @@ const Kingdoms: React.FC = props => {
       columns={state.columns}
       options={{
         actionsColumnIndex: -1,
+        addRowPosition: 'first',
         search: true,
         debounceInterval: 1000
       }}

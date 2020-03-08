@@ -92,7 +92,13 @@ createConnection()
     /**
      * Initialize the session middleware.
      */
-    app.use(session({ secret: 'JBR_SESSION_SECRET' }));
+    app.use(
+      session({
+        secret: 'JBR_SESSION_SECRET',
+        resave: true,
+        saveUninitialized: false
+      })
+    );
 
     /**
      * Middleware that initializes PassportJs.
