@@ -61,6 +61,7 @@ export default class DepartmentController {
     }
 
     department.name = name;
+    department.multiplier = req.body.multiplier;
     department.deputyVolunteer = req.body.deputyVolunteerId;
     department.headVolunteer = req.body.headVolunteerId;
 
@@ -98,6 +99,7 @@ export default class DepartmentController {
     departmentToUpdate.name = req.body.name;
     departmentToUpdate.deputyVolunteer = req.body.deputyVolunteerId;
     departmentToUpdate.headVolunteer = req.body.headVolunteerId;
+    departmentToUpdate.multiplier = req.body.multiplier;
 
     await deptRepo.update(id, departmentToUpdate);
 

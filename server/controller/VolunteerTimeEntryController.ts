@@ -17,14 +17,29 @@ export default class VolunteerTimeEntryController {
     response: Response
   ): Promise<void> {
     const id = request.query.id;
-    const timeEntries = await getManager()
+    const orderBy = request.query['orderBy'] || 'id';
+    const orderDirection = request.query['orderDirection'] || 'ASC';
+    const search = request.query['search'] || '';
+    const limit = parseInt(request.query['per_page']) || 0;
+    const page = parseInt(request.query['page']) || 0;
+    const offset = (page - 1) * limit;
+    const [results, total] = await getManager()
       .getRepository(VolunteerTimeEntry)
-      .find({
-        where: { volunteerId: id },
+      .createQueryBuilder('timeEntries')
+      .loadAllRelationIds({
         relations: ['department', 'enteredByUser', 'volunteer']
-      });
+      })
+      .where('timeEntries.volunteerId = :id', { id: id })
+      .orderBy(`timeEntries.${orderBy}`, orderDirection)
+      .skip(offset)
+      .take(limit)
+      .getManyAndCount();
 
-    response.send(timeEntries);
+    response.send({
+      data: results,
+      page: page,
+      total: total
+    });
   }
 
   /**
@@ -41,8 +56,8 @@ export default class VolunteerTimeEntryController {
     );
     let newTimeEntry = new VolunteerTimeEntry();
 
-    newTimeEntry.timeIn = new Date(request.body.timeIn); 
-    newTimeEntry.timeOut = new Date(request.body.timeOut); 
+    newTimeEntry.timeIn = new Date(request.body.timeIn);
+    newTimeEntry.timeOut = new Date(request.body.timeOut);
 
     if (
       newTimeEntry.timeOut.toDateString() !== newTimeEntry.timeIn.toDateString()
@@ -58,6 +73,9 @@ export default class VolunteerTimeEntryController {
     newTimeEntry.department = request.body.department;
     newTimeEntry.enteredByUser = request.body.enteredByUser;
     newTimeEntry.volunteer = request.body.volunteer;
+    newTimeEntry.timeIn = request.body.timeIn;
+    newTimeEntry.timeOut = request.body.timeOut;
+    newTimeEntry.date = request.body.date;
 
     await TimeEntryRepo.save(newTimeEntry);
 

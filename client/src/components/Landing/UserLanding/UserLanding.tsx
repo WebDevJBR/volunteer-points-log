@@ -1,5 +1,6 @@
 import React, { useState, useEffect }  from 'react';
-import { Grid, Checkbox, FormControlLabel, TextField, makeStyles, InputAdornment } from '@material-ui/core';
+import { Grid, Checkbox, FormControlLabel, TextField, InputAdornment } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import { ApiService } from '../../../shared/Services';
 import { ApiEndpoints } from '../../../shared/Constants';
 import { IVolunteer } from '../../../shared/Interfaces';
@@ -45,7 +46,7 @@ const UserLanding: React.FC = props => {
    */
   useEffect(() => {
     const getUserList = async () => {
-      const volunteers = await ApiService.get<Array<IVolunteer>>(ApiEndpoints.GetVolunteers);
+      const volunteers = await ApiService.get<Array<IVolunteer>>(ApiEndpoints.Volunteers);
 
       setState(previousState => ({ ...previousState, volunteerList: volunteers }));
     };
