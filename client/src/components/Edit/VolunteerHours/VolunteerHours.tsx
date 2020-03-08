@@ -13,7 +13,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import {
   DatePicker,
-  TimePicker,
+  KeyboardTimePicker,
   MuiPickersUtilsProvider
 } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
@@ -34,7 +34,8 @@ import {
   SaveAlt,
   Search,
   ViewColumn,
-  Refresh
+  Refresh,
+  AccessTime
 } from '@material-ui/icons';
 
 import PageBase from '../../../hoc/PageBase/PageBase';
@@ -252,10 +253,29 @@ const VolunteerHours: React.FC = props => {
     );
   };
 
+  const handleTimeChange = (date: any) => {
+    if (date){
+      try {
+        date?.toIsoString();
+      }
+      catch(e) {
+        //was an invalid date.  return
+        return date;
+      }
+
+      //we made it here without errors; valid time AND it isnt null
+      return date?.toIsoString();
+    }
+    else{
+      //time was null; happens with blank input field using keyboard input
+      return date;
+    }
+  };
+
   const TimeComponent = (props: EditComponentProps<IRow>) => {
     return (
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <TimePicker
+        <KeyboardTimePicker
           autoOk
           clearable
           ampm={false}
@@ -265,8 +285,10 @@ const VolunteerHours: React.FC = props => {
           initialFocusedDate={initialDateTime()}
           value={props.value}
           onChange={time => {
-            return props.onChange(time?.toISOString());
+            return props.onChange(handleTimeChange(time));
           }}
+          keyboardIcon={<AccessTime style={{ fontSize: 12 }}/>}
+          variant="inline"
         />
       </MuiPickersUtilsProvider>
     );
