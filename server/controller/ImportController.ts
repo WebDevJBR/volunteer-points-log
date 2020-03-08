@@ -5,7 +5,7 @@ import * as fs from 'fs';
 import { HttpStatusCodes } from '../constants/HttpStatusCodes';
 import { Kingdom } from '../entity/Kingdom';
 import { Volunteer } from '../entity/Volunteer';
-import { ToReceiveFundsType_REF } from '../entity/ToReceiveFundsType_REF';
+import { ToReceiveFundsType_REF } from '../entity/toReceiveFundsType_REF';
 import { LocalGroup } from '../entity/LocalGroup';
 import { Department } from '../entity/Department';
 
