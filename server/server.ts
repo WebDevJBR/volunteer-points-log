@@ -14,8 +14,6 @@ import CryptoHelper from './utils/CryptoHelper';
 import { STATUS_CODES } from 'http';
 import { HttpStatusCodes } from './constants/HttpStatusCodes';
 
-
-
 createConnection()
   .then(async connection => {
     /**
@@ -86,11 +84,11 @@ createConnection()
       );
       next();
     });
-    
+
     /**
      * File handling properties.
      */
-    const upload = multer({dest: path.join(__dirname, 'tmp')});
+    const upload = multer({ dest: path.join(__dirname, 'tmp') });
 
     /**
      * Parses incoming requests bodies as JSON.
@@ -152,6 +150,14 @@ createConnection()
         response.redirect(`/home`);
       }
     );
+
+    /**
+     * Logs the user out and redirects to the login screen.
+     */
+    app.get('/api/logout', (request: Request, response: Response) => {
+      request.logout();
+      response.redirect('/login');
+    });
 
     /**
      * Register all of the routes from the files in the route directory.

@@ -4,6 +4,7 @@ import { Button } from '../../shared/Input';
 import { useHistory } from 'react-router-dom';
 import { ApiService } from '../../shared/Services';
 import classes from './PageBase.module.scss';
+import { ApiEndpoints } from '../../shared/Constants';
 
 const PageBase: React.FC = (props) => {
   const history = useHistory();
@@ -14,7 +15,7 @@ const PageBase: React.FC = (props) => {
   };
   const Logout = async () => {
     try {
-      await ApiService.get('http://localhost:5000/logout');
+      await ApiService.get(ApiEndpoints.Logout);
       handleNavigate('/login');
     } catch {
       console.log("Error logging out");

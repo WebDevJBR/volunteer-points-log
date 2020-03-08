@@ -15,6 +15,7 @@ export const ApiEndpoints = {
    */
   Users: `${serverHost}/users`,
   Login: `${serverHost}/login`,
+  Logout: `${serverHost}/logout`,
   Kingdoms: `${serverHost}/kingdoms`,
   LocalGroups: `${serverHost}/local-groups`,
   Departments: `${serverHost}/departments`,
