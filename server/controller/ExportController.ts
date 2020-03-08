@@ -62,6 +62,12 @@ export class ExportController {
     let data = await json2csv.parse(csv_data);
 
     response.attachment('kingdomHours.csv');
+    response.set({
+        'Content-Type': 'text/csv',
+        'Content-Disposition': 'attachment; filename=kingdomAndGroups.csv',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+    });
     response.status(HttpStatusCodes.Ok).send(data);
   }
 
