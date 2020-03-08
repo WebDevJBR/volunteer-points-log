@@ -116,6 +116,22 @@ createConnection()
     app.use(express.static(path.join(__dirname, 'client')));
 
     /**
+     * Redirects base-uri requests to the corresponding admin or user landing.
+     */
+    app.get('/home', (request: Request, response: Response) => {
+      const user: User = request.user as User;
+      let redirectUri = '/landing/user';
+
+      if (!request.isAuthenticated()) {
+        redirectUri = '/login';
+      } else if (user.admin) {
+        redirectUri = '/landing/admin';
+      }
+
+      response.redirect(redirectUri);
+    });
+
+    /**
      * Handles authentication requests.
      *
      * Note: When a login attempt is met with failure,
@@ -125,7 +141,7 @@ createConnection()
       '/api/login',
       passport.authenticate('local', { failureRedirect: '/login' }),
       (request: Request, response: Response) => {
-        response.redirect(`/landing/user`);
+        response.redirect(`/home`);
       }
     );
 
