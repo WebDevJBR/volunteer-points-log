@@ -36,6 +36,26 @@ export const AppRoutes = [
     action: UserController.updateUser
   },
   {
+    path: '/volunteers/time-entry',
+    method: 'post',
+    action: VolunteerTimeEntryController.addTimeEntry
+  },
+  {
+    path: '/volunteers/time-entry',
+    method: 'get',
+    action: VolunteerTimeEntryController.getTimeEntries
+  },
+  {
+    path: '/volunteers/time-entry',
+    method: 'put',
+    action: VolunteerTimeEntryController.updateTimeEntry
+  },
+  {
+    path: '/volunteers/time-entry',
+    method: 'delete',
+    action: VolunteerTimeEntryController.deleteTimeEntry
+  },
+  {
     path: '/volunteers',
     method: 'get',
     action: VolunteerController.getVolunteers
@@ -159,26 +179,6 @@ export const AppRoutes = [
     path: '/funds-type',
     method: 'delete',
     action: ToReceiveFundsTypeController.deleteFundsType
-  },
-  {
-    path: '/volunteers/time-entry',
-    method: 'post',
-    action: VolunteerTimeEntryController.addTimeEntry
-  },
-  {
-    path: '/volunteers/time-entry',
-    method: 'get',
-    action: VolunteerTimeEntryController.getTimeEntries
-  },
-  {
-    path: '/volunteers/time-entry',
-    method: 'put',
-    action: VolunteerTimeEntryController.updateTimeEntry
-  },
-  {
-    path: '/volunteers/time-entry',
-    method: 'delete',
-    action: VolunteerTimeEntryController.deleteTimeEntry
   },
   {
     path: '/logout',
