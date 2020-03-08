@@ -6,7 +6,7 @@ import { HttpStatusCodes } from '../constants/HttpStatusCodes';
 /**
  * Handles calls from the 'volunteer/time-entry' route.
  */
-export default class VolunteerTimeEntryController {
+export class VolunteerTimeEntryController {
   /**
    * Gets a collection of all time entries for a given volunteer.
    * @param request The HTTP request.

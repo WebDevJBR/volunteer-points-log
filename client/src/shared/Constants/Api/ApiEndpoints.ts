@@ -20,5 +20,10 @@ export const ApiEndpoints = {
   Departments: `${serverHost}/departments`,
   Volunteers: `${serverHost}/volunteers`,
   TimeEntries: `${serverHost}/volunteers/time-entry`,
-  DateRange: `${serverHost}/date-range`
+  DateRange: `${serverHost}/date-range`,
+  ImportKingdomsAndGroups: `${serverHost}/import/kingdomsAndGroups`,
+  ImportVolunteers: `${serverHost}/import/volunteers`,
+  ImportDepartments: `${serverHost}/import/departments`,
+  ExportKingdoms: `${serverHost}/export/kingdoms`,
+  ExportBreakdown: `${serverHost}/export/breakdown`
 };

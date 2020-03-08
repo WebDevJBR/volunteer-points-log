@@ -3,6 +3,7 @@ import * as session from 'express-session';
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import * as path from 'path';
+import * as multer from 'multer';
 import * as passport from 'passport';
 import * as passportLocal from 'passport-local';
 import { createConnection, Repository, getManager, Like } from 'typeorm';
@@ -13,12 +14,14 @@ import CryptoHelper from './utils/CryptoHelper';
 import { STATUS_CODES } from 'http';
 import { HttpStatusCodes } from './constants/HttpStatusCodes';
 
+
+
 createConnection()
   .then(async connection => {
     /**
      * Synchronize database schema with models.
      */
-    await connection.synchronize();
+    await connection.synchronize(false);
 
     const app = express();
     const port = process.env.PORT || 5000;
@@ -83,6 +86,11 @@ createConnection()
       );
       next();
     });
+    
+    /**
+     * File handling properties.
+     */
+    const upload = multer({dest: path.join(__dirname, 'tmp')});
 
     /**
      * Parses incoming requests bodies as JSON.
@@ -151,6 +159,7 @@ createConnection()
     AppRoutes.forEach(route => {
       app[route.method](
         `${apiBase}${route.path}`,
+        upload.single('import-file'),
         (request: Request, response: Response, next: Function) => {
           // TODO: The OR should NOT be considered good-practice. The requirements is such that
           // we present a list of users in a dropdown list. This contradicts the idea of

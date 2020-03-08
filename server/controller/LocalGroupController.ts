@@ -6,7 +6,7 @@ import { HttpStatusCodes } from '../constants/HttpStatusCodes';
 /**
  * Handles calls from the 'local groups' route.
  */
-export default class LocalGroupController {
+export class LocalGroupController {
   /**
    * Retrieves list of all local groups.
    *

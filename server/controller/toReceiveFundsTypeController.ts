@@ -4,11 +4,11 @@
  */
 
 import { Request, Response } from 'express';
-import { ToReceiveFundsType_REF } from '../entity/toReceiveFundsType_REF';
+import { ToReceiveFundsType_REF } from '../entity/ToReceiveFundsType_REF';
 import { getManager, Like, Repository } from 'typeorm';
 import { HttpStatusCodes } from '../constants/HttpStatusCodes';
 
-export default class toReceiveFundsTypeController {
+export class ToReceiveFundsTypeController {
   /**
    * Retrieves all ToReceiveFundsTypes.
    *

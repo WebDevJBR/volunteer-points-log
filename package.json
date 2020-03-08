@@ -2,9 +2,9 @@
   "name": "volunteer-points-log",
   "version": "1.0.0",
   "description": "Application that allows SCA Gulf Wars volunteers to log their hours and accrue points.",
-  "main": "server/server.js",
+  "main": "server/server.ts",
   "scripts": {
-    "start:prod": "node ./build/server.js",
+    "start:prod": "nodemon",
     "start:dev": "nodemon -x \"npm run build && nodemon\"",
     "start:dev-server": "nodemon -x \"npm run build:server && nodemon\"",
     "install:all": "npm run install:server && npm run install:client",
@@ -45,6 +45,9 @@
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
     "material-table": "^1.57.2",
+    "csv-parser": "^2.3.2",
+    "json2csv": "^4.5.4",
+    "multer": "^1.4.2",
     "reflect-metadata": "^0.1.13",
     "sqlite3": "^4.1.1",
     "typeorm": "^0.2.22"

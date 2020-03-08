@@ -1,12 +1,16 @@
-import UserController from './controller/UserController';
-import VolunteerController from './controller/VolunteerController';
-import KingdomController from './controller/KingdomController';
-import DepartmentController from './controller/DepartmentController';
-import LocalGroupController from './controller/LocalGroupController';
-import DateRangeController from './controller/DateRangeController';
-import toReceiveFundsTypeController from './controller/toReceiveFundsTypeController';
-import VolunteerTimeEntryController from './controller/VolunteerTimeEntryController';
-import LogoutController from './controller/LogoutController';
+import { UserController } from './controller/UserController';
+import { VolunteerController } from './controller/VolunteerController';
+import { ImportController } from './controller/ImportController';
+import { ExportController } from './controller/ExportController';
+import { KingdomController } from './controller/KingdomController';  
+import { DepartmentController } from './controller/DepartmentController';
+import { LocalGroupController } from './controller/LocalGroupController';
+import { DateRangeController } from './controller/DateRangeController';
+import { VolunteerTimeEntryController } from './controller/VolunteerTimeEntryController';
+import { LogoutController } from './controller/LogoutController';
+import { ToReceiveFundsTypeController } from './controller/ToReceiveFundsTypeController';
+
+
 /**
  * All application routes
  */
@@ -159,26 +163,51 @@ export const AppRoutes = [
   {
     path: '/funds-type',
     method: 'get',
-    action: toReceiveFundsTypeController.getFundsTypes
+    action: ToReceiveFundsTypeController.getFundsTypes
   },
   {
     path: '/funds-type',
     method: 'post',
-    action: toReceiveFundsTypeController.addFundsType
+    action: ToReceiveFundsTypeController.addFundsType
   },
   {
     path: '/funds-type',
     method: 'put',
-    action: toReceiveFundsTypeController.updateFundsType
+    action: ToReceiveFundsTypeController.updateFundsType
   },
   {
     path: '/funds-type',
     method: 'delete',
-    action: toReceiveFundsTypeController.deleteFundsType
+    action: ToReceiveFundsTypeController.deleteFundsType
   },
   {
     path: '/logout',
     method: 'get',
     action: LogoutController.logout
+  },
+  {
+    path: '/import/kingdomsAndGroups',
+    method: 'post',
+    action: ImportController.importKingdomsAndGroups
+  },
+  {
+    path: '/import/volunteers',
+    method: 'post',
+    action: ImportController.importVolunteers
+  },
+  {
+    path: '/import/departments',
+    method: 'post',
+    action: ImportController.importDepartments
+  },
+  {
+    path: '/export/kingdoms',
+    method: 'get',
+    action: ExportController.exportKingdomHours
+  },
+  {
+    path: '/export/breakdown',
+    method: 'get',
+    action: ExportController.exportKingdomBreakdown
   }
 ];

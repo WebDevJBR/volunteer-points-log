@@ -8,7 +8,7 @@ import passport = require('passport');
 /**
  * Handles calls from the 'users' route.
  */
-export default class UserController {
+export class UserController {
   /**
    * Gets a collection of all users.
    * @param request The HTTP request.
