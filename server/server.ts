@@ -136,7 +136,7 @@ createConnection()
      */
     AppRoutes.forEach(route => {
       app[route.method](
-        route.path,
+        `${apiBase}${route.path}`,
         upload.single('import-file'),
         (request: Request, response: Response, next: Function) => {
           // TODO: The OR should NOT be considered good-practice. The requirements is such that
