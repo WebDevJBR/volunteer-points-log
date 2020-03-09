@@ -2,6 +2,9 @@ import { Request, Response } from 'express';
 import { Department } from '../entity/Department';
 import { getManager, Like, Repository } from 'typeorm';
 import { HttpStatusCodes } from '../constants/HttpStatusCodes';
+import { VolunteerTimeEntryController } from './VolunteerTimeEntryController';
+import { VolunteerTimeEntry } from '../entity/VolunteerTimeEntry';
+import { TimeEntryType } from '../enums/TimeEntryType';
 
 /**
  * Handles calls from the 'departments' route.
@@ -44,7 +47,7 @@ export class DepartmentController {
    * @param res The HTTP Response Object
    */
   static async addDepartment(req: Request, res: Response): Promise<void> {
-    const department = new Department();
+    let department: Department = new Department();
     const deptRepo: Repository<Department> = getManager().getRepository(
       Department
     );
@@ -65,7 +68,37 @@ export class DepartmentController {
     department.deputyVolunteer = req.body.deputyVolunteerId;
     department.headVolunteer = req.body.headVolunteerId;
 
-    await deptRepo.save(department);
+    department = await deptRepo.save(department);
+
+    if (department.headVolunteer && department.deputyVolunteer) {
+      if (department.headVolunteer === department.deputyVolunteer) {
+        // Deputy and Head are the same individual and therefore only receives 48 hours.
+        await VolunteerTimeEntryController.awardFortyEightHourCredit(
+          department.headVolunteer,
+          department.id
+        );
+      } else {
+        // Both Deputy and Head receive credits.
+        await VolunteerTimeEntryController.awardFortyEightHourCredit(
+          department.deputyVolunteer,
+          department.id
+        );
+        await VolunteerTimeEntryController.awardFortyEightHourCredit(
+          department.headVolunteer,
+          department.id
+        );
+      }
+    } else if (department.headVolunteer) {
+      await VolunteerTimeEntryController.awardFortyEightHourCredit(
+        department.headVolunteer,
+        department.id
+      );
+    } else if (department.deputyVolunteer) {
+      await VolunteerTimeEntryController.awardFortyEightHourCredit(
+        department.deputyVolunteer,
+        department.id
+      );
+    }
 
     res.sendStatus(HttpStatusCodes.Ok);
   }
@@ -80,6 +113,9 @@ export class DepartmentController {
   static async updateDepartment(req: Request, res: Response): Promise<void> {
     const deptRepo: Repository<Department> = getManager().getRepository(
       Department
+    );
+    const volunteerTimeEntryRepo: Repository<VolunteerTimeEntry> = getManager().getRepository(
+      VolunteerTimeEntry
     );
     const id = req.body.id;
     const newName: string = req.body.name;
@@ -103,6 +139,33 @@ export class DepartmentController {
 
     await deptRepo.update(id, departmentToUpdate);
 
+    const departmentCredits: Array<VolunteerTimeEntry> = await volunteerTimeEntryRepo.find(
+      {
+        where: {
+          department: departmentToUpdate.id,
+          timeEntryType: TimeEntryType.HeadOrDeputy
+        }
+      }
+    );
+
+    departmentCredits.forEach(async credit => {
+      await volunteerTimeEntryRepo.remove(credit);
+    });
+
+    if (departmentToUpdate.deputyVolunteer) {
+      await VolunteerTimeEntryController.awardFortyEightHourCredit(
+        departmentToUpdate.deputyVolunteer,
+        departmentToUpdate.id
+      );
+    }
+
+    if (departmentToUpdate.headVolunteer) {
+      await VolunteerTimeEntryController.awardFortyEightHourCredit(
+        departmentToUpdate.headVolunteer,
+        departmentToUpdate.id
+      );
+    }
+
     res.sendStatus(HttpStatusCodes.Ok);
   }
 
@@ -117,11 +180,27 @@ export class DepartmentController {
     const deptRepo: Repository<Department> = getManager().getRepository(
       Department
     );
-    const id = req.params.id;
+    const volunteerTimeEntryRepo: Repository<VolunteerTimeEntry> = getManager().getRepository(
+      VolunteerTimeEntry
+    );
+    const id = req.query.id;
     const department = await deptRepo.findOne(id);
 
     if (department) {
-      await deptRepo.remove(department);
+      await deptRepo.remove(department).catch(err => console.error(err));
+
+      const departmentCredits: Array<VolunteerTimeEntry> = await volunteerTimeEntryRepo.find(
+        {
+          where: {
+            department: department.id,
+            timeEntryType: TimeEntryType.HeadOrDeputy
+          }
+        }
+      );
+
+      departmentCredits.forEach(async credit => {
+        await volunteerTimeEntryRepo.remove(credit);
+      });
 
       res
         .status(HttpStatusCodes.Ok)
