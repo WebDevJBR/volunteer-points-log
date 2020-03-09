@@ -90,8 +90,8 @@ const AddVolunteer: React.FC = () => {
           return {
             ...prevState,
             volunteer: volunteer,
-            kingdomList: kingdoms.data,
-            localGroupList: localGroups.data
+            kingdomList: kingdoms?.data,
+            localGroupList: localGroups?.data
           };
         });
       } catch (error) {
@@ -114,7 +114,7 @@ const AddVolunteer: React.FC = () => {
     );
   }
 
-  if (state.localGroupList.length > 0) {
+  if (state.localGroupList && state.localGroupList.length > 0) {
     localGroupSelectOptions = (state.localGroupList as ILocalGroup[]).map(
       (localGroup: ILocalGroup) => {
         return (
@@ -248,7 +248,7 @@ const AddVolunteer: React.FC = () => {
   const submitHandler = async () => {
     let infoMissing: boolean = false;
 
-    if (!state.volunteer.membershipNumber || !state.volunteer.localGroup) {
+    if (!state.volunteer.kingdom || !state.volunteer.localGroup) {
       infoMissing = true;
     }
 
