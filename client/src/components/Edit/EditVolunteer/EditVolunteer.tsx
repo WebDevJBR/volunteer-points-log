@@ -290,6 +290,10 @@ const AddVolunteer: React.FC = () => {
     );
   };
 
+  const cancelHandler = async () => {
+    history.push('/landing/user');
+  }
+
   return (
     <PageBase>
       <div className={classes.titleContainer}>
@@ -433,9 +437,18 @@ const AddVolunteer: React.FC = () => {
           </RadioGroup>
         </FormControl>
       </div>
-      <Button color="primary" onClick={submitHandler}>
-        SAVE
-      </Button>
+      <div className={classes.container}>
+        <div className={classes.btnItem}>
+          <Button className={classes.submitButton} color="primary" onClick={submitHandler}>
+            SAVE
+          </Button>
+        </div>
+        <div className={classes.btnItem}>
+          <Button color="primary" onClick={cancelHandler}>
+                  CANCEL
+          </Button>
+        </div>
+      </div>
     </PageBase>
   );
 };

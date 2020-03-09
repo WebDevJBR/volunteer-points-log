@@ -6,7 +6,7 @@ import {
   FormControl,
   FormControlLabel,
   Radio,
-  RadioGroup
+  RadioGroup,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -273,6 +273,10 @@ const AddVolunteer: React.FC = () => {
     );
   };
 
+  const cancelHandler = async () => {
+    history.push('/landing/user');
+  }
+
   return (
     <PageBase>
       <div className={classes.titleContainer}>
@@ -416,9 +420,18 @@ const AddVolunteer: React.FC = () => {
           </RadioGroup>
         </FormControl>
       </div>
-      <Button color="primary" onClick={submitHandler}>
-        SAVE
-      </Button>
+      <div className={classes.container}>
+        <div className={classes.item}>
+          <Button className={classes.submitButton} color="primary" onClick={submitHandler}>
+            SAVE
+          </Button>
+        </div>
+        <div className={classes.item}>
+          <Button color="primary" onClick={cancelHandler}>
+                  CANCEL
+          </Button>
+        </div>
+      </div>
     </PageBase>
   );
 };

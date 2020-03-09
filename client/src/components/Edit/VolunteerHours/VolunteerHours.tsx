@@ -17,7 +17,7 @@ import {
   MuiPickersUtilsProvider
 } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import {
   AddBox,
   ArrowDownward,
@@ -100,6 +100,7 @@ const VolunteerHours: React.FC = props => {
 
   let multiplier: number;
 
+  const history = useHistory();
   const globalState = useStore();
   const ctx = {
     snackbar: {
@@ -543,6 +544,7 @@ const VolunteerHours: React.FC = props => {
   };
 
   const submitVolunteerDataHandler = async () => {
+
     if ((state.volunteer.feathersTaken as number) > state?.feathersEarned) {
       showSnackbar(
         false,
@@ -588,6 +590,7 @@ const VolunteerHours: React.FC = props => {
             : `Failed to update volunteer record!`;
 
         showSnackbar(success, alertMessage);
+        history.push('/landing/user');
       });
   };
 
