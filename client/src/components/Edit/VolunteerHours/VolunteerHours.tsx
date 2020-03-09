@@ -22,14 +22,11 @@ import {
   AddBox,
   ArrowDownward,
   Check,
-  ChevronLeft,
   ChevronRight,
   Clear,
   DeleteOutline,
   Edit,
   FilterList,
-  FirstPage,
-  LastPage,
   Remove,
   SaveAlt,
   Search,
@@ -333,8 +330,6 @@ const VolunteerHours: React.FC = props => {
 
     return await ApiService.get(ApiEndpoints.TimeEntries, {
       id: id,
-      per_page: query.pageSize,
-      page: query.page + 1,
       orderBy: orderBy,
       orderDirection: orderDirection,
       search: search
@@ -744,7 +739,8 @@ const VolunteerHours: React.FC = props => {
           sorting: true,
           grouping: true,
           search: false,
-          debounceInterval: 1000
+          debounceInterval: 1000,
+          paging: false
         }}
         actions={[
           {
@@ -768,18 +764,6 @@ const VolunteerHours: React.FC = props => {
           Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
           Filter: forwardRef((props, ref) => (
             <FilterList {...props} ref={ref} />
-          )),
-          FirstPage: forwardRef((props, ref) => (
-            <FirstPage {...props} ref={ref} />
-          )),
-          LastPage: forwardRef((props, ref) => (
-            <LastPage {...props} ref={ref} />
-          )),
-          NextPage: forwardRef((props, ref) => (
-            <ChevronRight {...props} ref={ref} />
-          )),
-          PreviousPage: forwardRef((props, ref) => (
-            <ChevronLeft {...props} ref={ref} />
           )),
           ResetSearch: forwardRef((props, ref) => (
             <Clear {...props} ref={ref} />

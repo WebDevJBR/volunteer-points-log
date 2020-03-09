@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getManager, Repository } from 'typeorm';
+import { getManager, Repository} from 'typeorm';
 import { VolunteerTimeEntry } from '../entity/VolunteerTimeEntry';
 import { HttpStatusCodes } from '../constants/HttpStatusCodes';
 
@@ -20,9 +20,6 @@ export class VolunteerTimeEntryController {
     const orderBy = request.query['orderBy'] || 'id';
     const orderDirection = request.query['orderDirection'] || 'ASC';
     const search = request.query['search'] || '';
-    const limit = parseInt(request.query['per_page']) || 0;
-    const page = parseInt(request.query['page']) || 0;
-    const offset = (page - 1) * limit;
     const [results, total] = await getManager()
       .getRepository(VolunteerTimeEntry)
       .createQueryBuilder('timeEntries')
@@ -31,13 +28,10 @@ export class VolunteerTimeEntryController {
       })
       .where('timeEntries.volunteerId = :id', { id: id })
       .orderBy(`timeEntries.${orderBy}`, orderDirection)
-      .skip(offset)
-      .take(limit)
       .getManyAndCount();
 
     response.send({
       data: results,
-      page: page,
       total: total
     });
   }
@@ -55,31 +49,56 @@ export class VolunteerTimeEntryController {
       VolunteerTimeEntry
     );
     let newTimeEntry = new VolunteerTimeEntry();
+    let newDate = new Date(request.body.date);
+    let newTimeIn = new Date(request.body.timeIn);
+    let newTimeOut = new Date(request.body.timeOut);
 
-    newTimeEntry.timeIn = new Date(request.body.timeIn);
-    newTimeEntry.timeOut = new Date(request.body.timeOut);
+    const timeEntries = await TimeEntryRepo
+      .find({
+        where: [
+          { volunteer: request.body.volunteer  }
+        ],
+        relations: ['department', 'enteredByUser', 'volunteer']
+      });
 
-    if (
-      newTimeEntry.timeOut.toDateString() !== newTimeEntry.timeIn.toDateString()
-    ) {
-      response
-        .status(HttpStatusCodes.Conflict)
-        .json('Error: Time in and Time Out must be on the same day.');
-      return;
+    let entryError: boolean = false;
+    timeEntries.forEach(element => {
+
+      let currentEntryDate = new Date(element.date);
+      if (currentEntryDate.toDateString() === newDate.toDateString()){
+        let currentEntryTimeIn = new Date(element.timeIn);
+        let currentEntryTimeOut = new Date(element.timeOut);
+        
+        if (newTimeIn > currentEntryTimeIn && newTimeIn < currentEntryTimeOut){
+          entryError = true;
+        }
+        else if(newTimeOut > currentEntryTimeIn && newTimeOut < currentEntryTimeOut){
+          entryError = true;
+        }
+        else if(newTimeOut === currentEntryTimeIn || newTimeOut === currentEntryTimeOut){
+          entryError = true;
+        }
+      }
+    });
+      
+
+    if (!entryError){
+      newTimeEntry.multiplier = request.body.multiplier;
+      newTimeEntry.comments = request.body.comments;
+      newTimeEntry.department = request.body.department;
+      newTimeEntry.enteredByUser = request.body.enteredByUser;
+      newTimeEntry.volunteer = request.body.volunteer;
+      newTimeEntry.timeIn = request.body.timeIn;
+      newTimeEntry.timeOut = request.body.timeOut;
+      newTimeEntry.date = request.body.date;
+  
+      await TimeEntryRepo.save(newTimeEntry);
+  
+      response.sendStatus(HttpStatusCodes.Ok);
     }
-
-    newTimeEntry.multiplier = request.body.multiplier;
-    newTimeEntry.comments = request.body.comments;
-    newTimeEntry.department = request.body.department;
-    newTimeEntry.enteredByUser = request.body.enteredByUser;
-    newTimeEntry.volunteer = request.body.volunteer;
-    newTimeEntry.timeIn = request.body.timeIn;
-    newTimeEntry.timeOut = request.body.timeOut;
-    newTimeEntry.date = request.body.date;
-
-    await TimeEntryRepo.save(newTimeEntry);
-
-    response.sendStatus(HttpStatusCodes.Ok);
+    else{
+      response.send(HttpStatusCodes.Conflict);
+    }
   }
 
   /**
