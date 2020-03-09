@@ -2,6 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
 import { Department } from "./Department";
 import { User } from "./User";
 import { Volunteer } from "./Volunteer";
+import { TimeEntryType } from "../enums/TimeEntryType";
 
 @Entity()
 export class VolunteerTimeEntry {
@@ -22,6 +23,9 @@ export class VolunteerTimeEntry {
 
   @Column({nullable: true})
   comments: string;
+
+  @Column({nullable: true})
+  timeEntryType: number;
 
   @ManyToOne(type => Department, department => department.timeEntries)
   department: number;

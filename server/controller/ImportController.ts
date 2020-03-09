@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { getManager, Repository, Like } from 'typeorm';
+import { getManager, Repository, Like, Equal } from 'typeorm';
 import * as csv from 'csv-parser';
 import * as fs from 'fs';
 import { HttpStatusCodes } from '../constants/HttpStatusCodes';
@@ -8,6 +8,9 @@ import { Volunteer } from '../entity/Volunteer';
 import { ToReceiveFundsType_REF } from '../entity/toReceiveFundsType_REF';
 import { LocalGroup } from '../entity/LocalGroup';
 import { Department } from '../entity/Department';
+import { VolunteerTimeEntry } from '../entity/VolunteerTimeEntry';
+import { TimeEntryType } from '../enums/TimeEntryType';
+import { VolunteerTimeEntryController } from './VolunteerTimeEntryController';
 
 /**
  * Handles calls from the 'imports' route.
@@ -273,9 +276,42 @@ export class ImportController {
               : newDepartment.name;
             newDepartment.headVolunteer = exisitingHead?.id;
             newDepartment.deputyVolunteer = exisitingDeputy?.id;
+            newDepartment.multiplier = 1;
 
-            if (newDepartment.name && newDepartment.headVolunteer) {
-              await departmentRepo.save(newDepartment);
+            if (newDepartment.name) {
+              newDepartment = await departmentRepo.save(newDepartment);
+            }
+
+            if (newDepartment.headVolunteer && newDepartment.deputyVolunteer) {
+              if (
+                newDepartment.headVolunteer === newDepartment.deputyVolunteer
+              ) {
+                // Deputy and Head are the same individual and therefore only receives 48 hours.
+                await VolunteerTimeEntryController.awardFortyEightHourCredit(
+                  newDepartment.headVolunteer,
+                  newDepartment.id
+                );
+              } else {
+                // Both Deputy and Head receive credits.
+                await VolunteerTimeEntryController.awardFortyEightHourCredit(
+                  newDepartment.deputyVolunteer,
+                  newDepartment.id
+                );
+                await VolunteerTimeEntryController.awardFortyEightHourCredit(
+                  newDepartment.headVolunteer,
+                  newDepartment.id
+                );
+              }
+            } else if (newDepartment.headVolunteer) {
+              await VolunteerTimeEntryController.awardFortyEightHourCredit(
+                newDepartment.headVolunteer,
+                newDepartment.id
+              );
+            } else if (newDepartment.deputyVolunteer) {
+              await VolunteerTimeEntryController.awardFortyEightHourCredit(
+                newDepartment.deputyVolunteer,
+                newDepartment.id
+              );
             }
           }
         }

@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
-import { getManager, Repository } from 'typeorm';
+import { getManager, Repository} from 'typeorm';
 import { VolunteerTimeEntry } from '../entity/VolunteerTimeEntry';
 import { HttpStatusCodes } from '../constants/HttpStatusCodes';
+import { TimeEntryType } from '../enums/TimeEntryType';
+import { User } from '../entity/User';
 
 /**
  * Handles calls from the 'volunteer/time-entry' route.
@@ -20,9 +22,6 @@ export class VolunteerTimeEntryController {
     const orderBy = request.query['orderBy'] || 'id';
     const orderDirection = request.query['orderDirection'] || 'ASC';
     const search = request.query['search'] || '';
-    const limit = parseInt(request.query['per_page']) || 0;
-    const page = parseInt(request.query['page']) || 0;
-    const offset = (page - 1) * limit;
     const [results, total] = await getManager()
       .getRepository(VolunteerTimeEntry)
       .createQueryBuilder('timeEntries')
@@ -31,13 +30,10 @@ export class VolunteerTimeEntryController {
       })
       .where('timeEntries.volunteerId = :id', { id: id })
       .orderBy(`timeEntries.${orderBy}`, orderDirection)
-      .skip(offset)
-      .take(limit)
       .getManyAndCount();
 
     response.send({
       data: results,
-      page: page,
       total: total
     });
   }
@@ -54,32 +50,58 @@ export class VolunteerTimeEntryController {
     const TimeEntryRepo: Repository<VolunteerTimeEntry> = getManager().getRepository(
       VolunteerTimeEntry
     );
+    const user = request.user as User;
     let newTimeEntry = new VolunteerTimeEntry();
+    let newDate = new Date(request.body.date);
+    let newTimeIn = new Date(request.body.timeIn);
+    let newTimeOut = new Date(request.body.timeOut);
 
-    newTimeEntry.timeIn = new Date(request.body.timeIn);
-    newTimeEntry.timeOut = new Date(request.body.timeOut);
+    const timeEntries = await TimeEntryRepo
+      .find({
+        where: [
+          { volunteer: request.body.volunteer  }
+        ],
+        relations: ['department', 'enteredByUser', 'volunteer']
+      });
 
-    if (
-      newTimeEntry.timeOut.toDateString() !== newTimeEntry.timeIn.toDateString()
-    ) {
-      response
-        .status(HttpStatusCodes.Conflict)
-        .json('Error: Time in and Time Out must be on the same day.');
-      return;
+    let entryError: boolean = false;
+    timeEntries.forEach(element => {
+
+      let currentEntryDate = new Date(element.date);
+      if (currentEntryDate.toDateString() === newDate.toDateString()){
+        let currentEntryTimeIn = new Date(element.timeIn);
+        let currentEntryTimeOut = new Date(element.timeOut);
+        
+        if (newTimeIn > currentEntryTimeIn && newTimeIn < currentEntryTimeOut){
+          entryError = true;
+        }
+        else if(newTimeOut > currentEntryTimeIn && newTimeOut < currentEntryTimeOut){
+          entryError = true;
+        }
+        else if(newTimeOut === currentEntryTimeIn || newTimeOut === currentEntryTimeOut){
+          entryError = true;
+        }
+      }
+    });
+      
+
+    if (!entryError){
+      newTimeEntry.multiplier = request.body.multiplier;
+      newTimeEntry.comments = request.body.comments;
+      newTimeEntry.department = request.body.department;
+      newTimeEntry.enteredByUser = request.body.enteredByUser;
+      newTimeEntry.volunteer = request.body.volunteer;
+      newTimeEntry.timeIn = request.body.timeIn;
+      newTimeEntry.timeOut = request.body.timeOut;
+      newTimeEntry.date = request.body.date;
+  
+      await TimeEntryRepo.save(newTimeEntry);
+  
+      response.sendStatus(HttpStatusCodes.Ok);
     }
-
-    newTimeEntry.multiplier = request.body.multiplier;
-    newTimeEntry.comments = request.body.comments;
-    newTimeEntry.department = request.body.department;
-    newTimeEntry.enteredByUser = request.body.enteredByUser;
-    newTimeEntry.volunteer = request.body.volunteer;
-    newTimeEntry.timeIn = request.body.timeIn;
-    newTimeEntry.timeOut = request.body.timeOut;
-    newTimeEntry.date = request.body.date;
-
-    await TimeEntryRepo.save(newTimeEntry);
-
-    response.sendStatus(HttpStatusCodes.Ok);
+    else{
+      response.send(HttpStatusCodes.Conflict);
+    }
   }
 
   /**
@@ -131,5 +153,54 @@ export class VolunteerTimeEntryController {
     response
       .status(HttpStatusCodes.NotFound)
       .json(`Time Entry with ID: ${id} not found.`);
+  }
+
+  /**
+   * Adds a 48 hour credit for a volunteer who is either a department head or deputy.
+   * @param volunteerId The Id of the Volunteer.
+   * @param departmentId The Id of the Department for which the hours are being awarded.
+   */
+  static async awardFortyEightHourCredit(
+    volunteerId: number,
+    departmentId: number
+  ): Promise<void> {
+    const volunteerTimeEntryRepo: Repository<VolunteerTimeEntry> = getManager().getRepository(
+      VolunteerTimeEntry
+    );
+
+    let existingCredit: VolunteerTimeEntry = await volunteerTimeEntryRepo.findOne(
+      {
+        where: {
+          volunteer: volunteerId,
+          timeEntryType: TimeEntryType.HeadOrDeputy
+        }
+      }
+    );
+
+    if (!existingCredit) {
+      const now = new Date();
+      let newTimeEntry: VolunteerTimeEntry = new VolunteerTimeEntry();
+
+      newTimeEntry.date = now;
+      newTimeEntry.timeIn = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        0,
+        0,
+        0,
+        0
+      );
+      newTimeEntry.timeOut = new Date(
+        newTimeEntry.timeIn.getTime() + 1000 * 60 * 60 * 24 * 2 // 48 hours later
+      );
+      newTimeEntry.multiplier = 1;
+      newTimeEntry.comments = '48 Hour Head/Deputy Credit';
+      newTimeEntry.timeEntryType = TimeEntryType.HeadOrDeputy;
+      newTimeEntry.volunteer = volunteerId;
+      newTimeEntry.department = departmentId;
+
+      volunteerTimeEntryRepo.save(newTimeEntry);
+    }
   }
 }

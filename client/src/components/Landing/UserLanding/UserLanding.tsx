@@ -24,8 +24,7 @@ const useTextFieldStyles = makeStyles({
 
 const useInputAdornmentStyles = makeStyles({
   root: {
-    paddingLeft: '5px',
-    paddingRight: '10%'
+    paddingLeft: '5px'
   }
 });
 
@@ -63,6 +62,7 @@ const UserLanding: React.FC = props => {
   }, []);
 
   const checkboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.persist();
     setState(previousState => ({ ...previousState, missingInfo: event.target.checked}))
   }
 

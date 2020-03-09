@@ -17,19 +17,16 @@ import {
   MuiPickersUtilsProvider
 } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import {
   AddBox,
   ArrowDownward,
   Check,
-  ChevronLeft,
   ChevronRight,
   Clear,
   DeleteOutline,
   Edit,
   FilterList,
-  FirstPage,
-  LastPage,
   Remove,
   SaveAlt,
   Search,
@@ -100,6 +97,7 @@ const VolunteerHours: React.FC = props => {
 
   let multiplier: number;
 
+  const history = useHistory();
   const globalState = useStore();
   const ctx = {
     snackbar: {
@@ -333,8 +331,6 @@ const VolunteerHours: React.FC = props => {
 
     return await ApiService.get(ApiEndpoints.TimeEntries, {
       id: id,
-      per_page: query.pageSize,
-      page: query.page + 1,
       orderBy: orderBy,
       orderDirection: orderDirection,
       search: search
@@ -543,31 +539,6 @@ const VolunteerHours: React.FC = props => {
   };
 
   const submitVolunteerDataHandler = async () => {
-    if ((state.volunteer.feathersTaken as number) > state?.feathersEarned) {
-      showSnackbar(
-        false,
-        'Feathers Taken cannot be greater than Feathers Earned'
-      );
-      return;
-    } else if (
-      (state.volunteer.ticketsTaken as number) > state?.ticketsEarned
-    ) {
-      showSnackbar(
-        false,
-        'Tickets Taken cannot be greater than Tickets Earned'
-      );
-      return;
-    } else if (
-      (state.volunteer.aboveAndBeyondTaken as number) >
-      state.aboveAndBeyondEarned
-    ) {
-      showSnackbar(
-        false,
-        'Above & Beyond Taken cannot be greater than Above & Beyond Earned'
-      );
-      return;
-    }
-
     let success: boolean;
 
     await ApiService.put(ApiEndpoints.Volunteers, {
@@ -588,6 +559,7 @@ const VolunteerHours: React.FC = props => {
             : `Failed to update volunteer record!`;
 
         showSnackbar(success, alertMessage);
+        history.push('/landing/user');
       });
   };
 
@@ -744,7 +716,8 @@ const VolunteerHours: React.FC = props => {
           sorting: true,
           grouping: true,
           search: false,
-          debounceInterval: 1000
+          debounceInterval: 1000,
+          paging: false
         }}
         actions={[
           {
@@ -768,18 +741,6 @@ const VolunteerHours: React.FC = props => {
           Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
           Filter: forwardRef((props, ref) => (
             <FilterList {...props} ref={ref} />
-          )),
-          FirstPage: forwardRef((props, ref) => (
-            <FirstPage {...props} ref={ref} />
-          )),
-          LastPage: forwardRef((props, ref) => (
-            <LastPage {...props} ref={ref} />
-          )),
-          NextPage: forwardRef((props, ref) => (
-            <ChevronRight {...props} ref={ref} />
-          )),
-          PreviousPage: forwardRef((props, ref) => (
-            <ChevronLeft {...props} ref={ref} />
           )),
           ResetSearch: forwardRef((props, ref) => (
             <Clear {...props} ref={ref} />

@@ -90,8 +90,8 @@ const AddVolunteer: React.FC = () => {
           return {
             ...prevState,
             volunteer: volunteer,
-            kingdomList: kingdoms.data,
-            localGroupList: localGroups.data
+            kingdomList: kingdoms?.data,
+            localGroupList: localGroups?.data
           };
         });
       } catch (error) {
@@ -114,7 +114,7 @@ const AddVolunteer: React.FC = () => {
     );
   }
 
-  if (state.localGroupList.length > 0) {
+  if (state.localGroupList && state.localGroupList.length > 0) {
     localGroupSelectOptions = (state.localGroupList as ILocalGroup[]).map(
       (localGroup: ILocalGroup) => {
         return (
@@ -248,7 +248,7 @@ const AddVolunteer: React.FC = () => {
   const submitHandler = async () => {
     let infoMissing: boolean = false;
 
-    if (!state.volunteer.membershipNumber || !state.volunteer.localGroup) {
+    if (!state.volunteer.kingdom || !state.volunteer.localGroup) {
       infoMissing = true;
     }
 
@@ -289,6 +289,10 @@ const AddVolunteer: React.FC = () => {
       })
     );
   };
+
+  const cancelHandler = async () => {
+    history.push('/landing/user');
+  }
 
   return (
     <PageBase>
@@ -433,9 +437,18 @@ const AddVolunteer: React.FC = () => {
           </RadioGroup>
         </FormControl>
       </div>
-      <Button color="primary" onClick={submitHandler}>
-        SAVE
-      </Button>
+      <div className={classes.container}>
+        <div className={classes.btnItem}>
+          <Button className={classes.submitButton} color="primary" onClick={submitHandler}>
+            SAVE
+          </Button>
+        </div>
+        <div className={classes.btnItem}>
+          <Button color="primary" onClick={cancelHandler}>
+                  CANCEL
+          </Button>
+        </div>
+      </div>
     </PageBase>
   );
 };
