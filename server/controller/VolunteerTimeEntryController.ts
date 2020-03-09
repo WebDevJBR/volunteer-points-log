@@ -89,7 +89,7 @@ export class VolunteerTimeEntryController {
       newTimeEntry.multiplier = request.body.multiplier;
       newTimeEntry.comments = request.body.comments;
       newTimeEntry.department = request.body.department;
-      newTimeEntry.enteredByUser = request.body.enteredByUser;
+      newTimeEntry.enteredByUser = user.id;
       newTimeEntry.volunteer = request.body.volunteer;
       newTimeEntry.timeIn = request.body.timeIn;
       newTimeEntry.timeOut = request.body.timeOut;
