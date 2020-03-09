@@ -63,6 +63,7 @@ const UserLanding: React.FC = props => {
   }, []);
 
   const checkboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.persist();
     setState(previousState => ({ ...previousState, missingInfo: event.target.checked}))
   }
 
