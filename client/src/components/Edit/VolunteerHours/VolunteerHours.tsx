@@ -539,32 +539,6 @@ const VolunteerHours: React.FC = props => {
   };
 
   const submitVolunteerDataHandler = async () => {
-
-    if ((state.volunteer.feathersTaken as number) > state?.feathersEarned) {
-      showSnackbar(
-        false,
-        'Feathers Taken cannot be greater than Feathers Earned'
-      );
-      return;
-    } else if (
-      (state.volunteer.ticketsTaken as number) > state?.ticketsEarned
-    ) {
-      showSnackbar(
-        false,
-        'Tickets Taken cannot be greater than Tickets Earned'
-      );
-      return;
-    } else if (
-      (state.volunteer.aboveAndBeyondTaken as number) >
-      state.aboveAndBeyondEarned
-    ) {
-      showSnackbar(
-        false,
-        'Above & Beyond Taken cannot be greater than Above & Beyond Earned'
-      );
-      return;
-    }
-
     let success: boolean;
 
     await ApiService.put(ApiEndpoints.Volunteers, {
