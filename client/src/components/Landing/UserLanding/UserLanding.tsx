@@ -24,8 +24,7 @@ const useTextFieldStyles = makeStyles({
 
 const useInputAdornmentStyles = makeStyles({
   root: {
-    paddingLeft: '5px',
-    paddingRight: '10%'
+    paddingLeft: '5px'
   }
 });
 
