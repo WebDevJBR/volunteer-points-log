@@ -1,4 +1,4 @@
-const serverHost = `http://${window.location.hostname}:5000/api`;
+const serverHost = `http://${window.location.hostname}:${window.location.port}/api`;
 
 /**
  * API Endpoints through which HTTP requests are routed.
