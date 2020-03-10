@@ -53,8 +53,15 @@ export class VolunteerTimeEntryController {
     const user = request.user as User;
     let newTimeEntry = new VolunteerTimeEntry();
     let newDate = new Date(request.body.date);
+
+    //set seconds and milliseconds so comparison for duplicates/overlapping works correctly
     let newTimeIn = new Date(request.body.timeIn);
+    newTimeIn.setSeconds(0);
+    newTimeIn.setMilliseconds(0);
+
     let newTimeOut = new Date(request.body.timeOut);
+    newTimeOut.setSeconds(0);
+    newTimeOut.setMilliseconds(0);
 
     const timeEntries = await TimeEntryRepo
       .find({
@@ -65,20 +72,27 @@ export class VolunteerTimeEntryController {
       });
 
     let entryError: boolean = false;
+
     timeEntries.forEach(element => {
 
       let currentEntryDate = new Date(element.date);
       if (currentEntryDate.toDateString() === newDate.toDateString()){
+
         let currentEntryTimeIn = new Date(element.timeIn);
+        currentEntryTimeIn.setSeconds(0);
+        currentEntryTimeIn.setMilliseconds(0);
+
         let currentEntryTimeOut = new Date(element.timeOut);
+        currentEntryTimeOut.setSeconds(0);
+        currentEntryTimeOut.setMilliseconds(0);
         
-        if (newTimeIn > currentEntryTimeIn && newTimeIn < currentEntryTimeOut){
+        if (newTimeIn.getTime() > currentEntryTimeIn.getTime() && newTimeIn.getTime() < currentEntryTimeOut.getTime()){
           entryError = true;
         }
-        else if(newTimeOut > currentEntryTimeIn && newTimeOut < currentEntryTimeOut){
+        else if(newTimeOut.getTime() > currentEntryTimeIn.getTime() && newTimeOut.getTime() < currentEntryTimeOut.getTime()){
           entryError = true;
         }
-        else if(newTimeOut === currentEntryTimeIn || newTimeOut === currentEntryTimeOut){
+        else if(newTimeOut.getTime() === currentEntryTimeIn.getTime() || newTimeOut.getTime() === currentEntryTimeOut.getTime()){
           entryError = true;
         }
       }
@@ -117,12 +131,63 @@ export class VolunteerTimeEntryController {
       VolunteerTimeEntry
     );
     const id = request.body.id;
+    let newDate = new Date(request.body.date);
+    
+    //set seconds and milliseconds so comparison for duplicates/overlapping works correctly
+    let newTimeIn = new Date(request.body.timeIn);
+    newTimeIn.setSeconds(0);
+    newTimeIn.setMilliseconds(0);
 
-    let entryToUpdate: VolunteerTimeEntry = await TimeEntryRepo.findOne(id);
-    entryToUpdate = request.body;
-    await TimeEntryRepo.update(id, entryToUpdate);
+    let newTimeOut = new Date(request.body.timeOut);
+    newTimeOut.setSeconds(0);
+    newTimeOut.setMilliseconds(0);
 
-    response.sendStatus(HttpStatusCodes.Ok);
+    const timeEntries = await TimeEntryRepo
+      .find({
+        where: [
+          { volunteer: request.body.volunteer  }
+        ],
+        relations: ['department', 'enteredByUser', 'volunteer']
+      });
+
+    let entryError: boolean = false;
+
+    timeEntries.forEach(element => {
+
+      let currentEntryDate = new Date(element.date);
+      if (currentEntryDate.toDateString() === newDate.toDateString()){
+
+        let currentEntryTimeIn = new Date(element.timeIn);
+        currentEntryTimeIn.setSeconds(0);
+        currentEntryTimeIn.setMilliseconds(0);
+
+        let currentEntryTimeOut = new Date(element.timeOut);
+        currentEntryTimeOut.setSeconds(0);
+        currentEntryTimeOut.setMilliseconds(0);
+        
+        if (newTimeIn.getTime() > currentEntryTimeIn.getTime() && newTimeIn.getTime() < currentEntryTimeOut.getTime()){
+          entryError = true;
+        }
+        else if(newTimeOut.getTime() > currentEntryTimeIn.getTime() && newTimeOut.getTime() < currentEntryTimeOut.getTime()){
+          entryError = true;
+        }
+        else if(newTimeOut.getTime() === currentEntryTimeIn.getTime() || newTimeOut.getTime() === currentEntryTimeOut.getTime()){
+          entryError = true;
+        }
+      }
+    });
+
+    if (!entryError) {
+      let entryToUpdate: VolunteerTimeEntry = await TimeEntryRepo.findOne(id);
+      entryToUpdate = request.body;
+      await TimeEntryRepo.update(id, entryToUpdate);
+  
+      response.sendStatus(HttpStatusCodes.Ok);
+    }
+    else{
+      response.send(HttpStatusCodes.Conflict);
+    }
+    
   }
 
   /**
