@@ -1,7 +1,7 @@
 export interface IDepartment {
   id: number;
   name: string;
-  deputyVolunteerId: number;
-  headVolunteerId: number;
+  deputyVolunteer: number;
+  headVolunteer: number;
   multiplier: number;
 }

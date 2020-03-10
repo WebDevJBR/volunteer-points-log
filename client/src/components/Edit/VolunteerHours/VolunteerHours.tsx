@@ -252,19 +252,17 @@ const VolunteerHours: React.FC = props => {
   };
 
   const handleTimeChange = (date: any) => {
-    if (date){
+    if (date) {
       try {
         date?.toIsoString();
-      }
-      catch(e) {
+      } catch (e) {
         //was an invalid date.  return
         return date;
       }
 
       //we made it here without errors; valid time AND it isnt null
       return date?.toIsoString();
-    }
-    else{
+    } else {
       //time was null; happens with blank input field using keyboard input
       return date;
     }
@@ -285,7 +283,7 @@ const VolunteerHours: React.FC = props => {
           onChange={time => {
             return props.onChange(handleTimeChange(time));
           }}
-          keyboardIcon={<AccessTime style={{ fontSize: 12 }}/>}
+          keyboardIcon={<AccessTime style={{ fontSize: 12 }} />}
           variant="inline"
         />
       </MuiPickersUtilsProvider>
@@ -422,6 +420,12 @@ const VolunteerHours: React.FC = props => {
     ) {
       showSnackbar(false, 'Time Out must be after Time In');
       return;
+    } else if (checkDeputyHead(newData.department)) {
+      showSnackbar(
+        false,
+        'Cannot add time when volunteer is the Head or Deputy of selected Department.'
+      );
+      return;
     }
 
     let success: boolean;
@@ -471,6 +475,12 @@ const VolunteerHours: React.FC = props => {
     ) {
       showSnackbar(false, 'Time Out must be after Time In');
       return;
+    } else if (checkDeputyHead(newData.department)) {
+      showSnackbar(
+        false,
+        'Cannot add time when volunteer is the Head or Deputy of selected Department.'
+      );
+      return;
     }
 
     let success: boolean;
@@ -494,6 +504,24 @@ const VolunteerHours: React.FC = props => {
             : `Failed to update time entry!`;
         showSnackbar(success, alertMessage);
       });
+  };
+
+  const checkDeputyHead = (departmentId: number) => {
+    const department:
+      IDepartment
+      | undefined = (state.departments as IDepartment[]).find(
+      (department: IDepartment) => {
+        return department.id === departmentId;
+      }
+    );
+
+    if (department !== undefined) {
+      return (
+        department.headVolunteer === state.volunteer.id ||
+        department.deputyVolunteer === state.volunteer.id ||
+        false
+      );
+    }
   };
 
   const showSnackbar = (success: boolean, alertMessage: string) => {
