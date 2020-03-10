@@ -1,6 +1,10 @@
 FROM node:latest
-EXPOSE 5000
+EXPOSE 80
 COPY . .
 RUN npm install
-RUN npm run build:server
+WORKDIR client
+RUN npm install
+WORKDIR ..
+RUN npm run build
 CMD ["node", "build/server.js"]
+
