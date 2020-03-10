@@ -20,7 +20,7 @@ import {
 } from '@material-ui/icons';
 
 import { ApiService } from '../../../../../shared/Services';
-import {ApiEndpoints} from '../../../../../shared/Constants/Api/ApiEndpoints';
+import { ApiEndpoints } from '../../../../../shared/Constants/Api/ApiEndpoints';
 import { useStore } from '../../../../../store';
 import { SnackbarActions } from '../../../../../store/Actions';
 
@@ -151,7 +151,9 @@ const Kingdoms: React.FC = props => {
         actionsColumnIndex: -1,
         addRowPosition: 'first',
         search: true,
-        debounceInterval: 1000
+        debounceInterval: 1000,
+        pageSize: 50,
+        pageSizeOptions: [5, 10, 20, 50, 100]
       }}
       icons={{
         Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),

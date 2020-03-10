@@ -262,8 +262,11 @@ const Departments: React.FC = props => {
       columns={tableColumns}
       options={{
         actionsColumnIndex: -1,
+        addRowPosition: 'first',
         search: true,
-        debounceInterval: 1000
+        debounceInterval: 1000,
+        pageSize: 50,
+        pageSizeOptions: [5, 10, 20, 50, 100]
       }}
       icons={{
         Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),

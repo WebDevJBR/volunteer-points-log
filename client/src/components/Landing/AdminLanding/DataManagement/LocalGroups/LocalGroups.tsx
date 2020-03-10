@@ -23,7 +23,7 @@ import {
 
 import { Select } from '../../../../../shared/Input';
 import { ApiService } from '../../../../../shared/Services';
-import {ApiEndpoints} from '../../../../../shared/Constants/Api/ApiEndpoints';
+import { ApiEndpoints } from '../../../../../shared/Constants/Api/ApiEndpoints';
 import { useStore } from '../../../../../store';
 import { SnackbarActions } from '../../../../../store/Actions';
 import classes from './LocalGroups.module.scss';
@@ -70,9 +70,7 @@ const LocalGroups: React.FC = props => {
 
   useEffect(() => {
     const fetchKingdoms = async () => {
-      const response: any = await ApiService.get(
-        ApiEndpoints.Kingdoms
-      );
+      const response: any = await ApiService.get(ApiEndpoints.Kingdoms);
 
       setState((prevState: TableState) => {
         return {
@@ -257,8 +255,11 @@ const LocalGroups: React.FC = props => {
         columns={state.columns}
         options={{
           actionsColumnIndex: -1,
+          addRowPosition: 'first',
           search: true,
-          debounceInterval: 1000
+          debounceInterval: 1000,
+          pageSize: 50,
+          pageSizeOptions: [5, 10, 20, 50, 100]
         }}
         icons={{
           Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
