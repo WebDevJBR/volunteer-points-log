@@ -69,9 +69,9 @@ export class VolunteerController {
     const volunteerRepo: Repository<Volunteer> = getManager().getRepository(
       Volunteer
     );
-    const mka: string = request.body.mka;
+    const name: string = request.body.name;
     const existingVolunteer: Volunteer = await volunteerRepo.findOne({
-      where: { mka: Like(mka) }
+      where: { name: Like(name) }
     });
 
     if (existingVolunteer) {
