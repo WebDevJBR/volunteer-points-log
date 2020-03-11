@@ -1,4 +1,4 @@
-$url = 'http://localhost:5000/api/users'
+$url = 'http://volunteer/api/users'
 $name = 'admin'
 $password = $args[0]
 $admin = 'true'
